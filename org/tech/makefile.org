@@ -1,0 +1,9 @@
+#+TITLE: Makefile 简介
+
+* 构建系统
+  makefile是一种构建系统，种其它环境中常用scons, maven, gradle等是同一类,解决相同的问题。
+  构建系统(build system)
+  
+
+
+

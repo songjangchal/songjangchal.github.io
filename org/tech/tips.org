@@ -1,0 +1,114 @@
+#+title: 一些小技巧
+
+
+* 代替__FILE__宏只显示文件名
+  [[https://stackoverflow.com/questions/8487986/file-macro-shows-full-path][参考]]
+
+  在默认的情况下，__FILE__ 被替换成文件的完整路径名，
+  如
+#+BEGIN_SRC 
+    gcc -o app/src/module/proxy.c
+#+END_SRC
+
+    __FILE__ 值为 app/src/module/proxy.c
+ 
+  但如果在module目录下执行
+#+BEGIN_SRC 
+    gcc -o proxy.c
+#+END_SRC
+    __FILE__ 值为 proxy.c
+
+    在cmake ,scons等编译系统下，log长度就会很长，而我们只希望保留文件名即可
+
+** 在运行时去掉
+
+#+BEGIN_SRC 
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#+END_SRC
+
+
+在使用时就用__FILENAME__代替__FILE__
+
+** 在预编译去掉 
+*** 在makefile中
+
+自己写的例子
+
+c文件
+
+#+BEGIN_SRC  c
+
+#define BASIC_TRACE(level, format, ...)                                  \
+    do{                                                                 \
+        if(level <= 5){                                      \
+            printf("%s(%d): "format"\n", __FILENAME__, __LINE__, ##__VA_ARGS__); \
+        }                                                               \
+    }while(0)
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+void main(void){
+
+    BASIC_TRACE(1, "etette");
+}
+
+
+#+END_SRC
+
+
+makefile 
+
+#+BEGIN_SRC makefile
+
+all: test
+clean:
+	rm -f test.o test
+
+test : test.c
+	gcc $< -D__FILENAME__=\"$(notdir $<)\" -o $@
+
+#+END_SRC
+
+
+
+进一步可以放在CFLAGS里
+
+#+BEGIN_SRC makefile
+all: test
+
+clean:
+	rm -f test.o test
+
+CFLAGS = -D__FILENAME__=\"$(notdir $(abspath $<))\"
+#CFLAGS = -D__FILENAME__=\"$(notdir $<)\"
+
+test : test.c
+	gcc $< ${CFLAGS} -o $@
+#+END_SRC
+
+
+这里用到了make的notdir函数，作用是去掉路径部分.
+abspath不是必须的，只是为了说明notdir函数
+*** 在scons中
+scons中可以设置编译的命令行，$CCCOM,
+以在rt-thread项目为例，
+在bsp/stm32f20x/SConstruct文件中，
+
+#+BEGIN_SRC python
+if rtconfig.PLATFORM == 'gcc':
+   	env.Replace(CCCOM = ['basename $SOURCES | xargs -i{} $CC -o $TARGET -c -D__FILENAME__=\\\"{}\\\" $CFLAGS $CCFLAGS $_CCCOMCOM $SOURCES'])
+#+END_SRC
+
+先用basename 命令去除多余部分，然后传给$CC， 定义一个宏。
+注意这是用的是两次转义操作，因为要在python和bash各转一次。
+
+*** cmake
+If you are using CMAKE with GNU compiler this global define works fine
+#+BEGIN_SRC 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__MY_FILE__='\"$(notdir $(abspath $<))\"'")
+#+END_SRC
+

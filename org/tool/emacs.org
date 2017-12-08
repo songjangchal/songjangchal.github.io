@@ -1,0 +1,13 @@
+#+title: emacs 相关
+
+* 
+
+* 扩展
+  - yasnippet
+
+* 一些参考
+  - https://github.com/martyr-deepin/deepin-emacs
+
+** org
+   - http://orgmode.org/worg/
+   - http://sachachua.com/

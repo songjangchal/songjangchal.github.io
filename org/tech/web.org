@@ -1,0 +1,10 @@
+#+title: 网页技术
+
+* 静态网站生成
+
+** JAMstack 
+   “JavaScript，APIs，Markup”
+
+* flow.js vs typescript
+
+* clojurescript, elm, purescript

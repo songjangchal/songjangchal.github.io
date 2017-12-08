@@ -1,0 +1,97 @@
+#+title: ibus输入法
+
+* ibus接口
+https://stackoverflow.com/questions/22031653/how-to-change-ibus-input-method-in-python
+
+https://github.com/bouzuya/vim-ibus
+
+file:///usr/share/gtk-doc/html/ibus/index.html
+
+** list engine
+#+BEGIN_SRC python
+  try:
+    import ibus,dbus
+    bus = ibus.Bus()
+    names = []
+    for engine in bus.list_engines():
+      names.append(str(engine.name))
+      print(engine.name)
+  except Exception, e:
+    print "Failed to connect to iBus"
+    print e
+
+#+END_SRC
+** set engine
+
+#+BEGIN_SRC python
+
+#!/usr/bin/env python
+
+# Basically ripped off from Horatio's stackoverflow question
+# http://stackoverflow.com/questions/22031653/how-to-change-ibus-input-method-in-python
+
+try:
+    import ibus
+    bus = ibus.Bus()
+    ic = ibus.InputContext(bus, bus.current_input_contxt())
+
+    #current engine
+    desc = ic.get_engine()
+    print(desc.get_name())
+    print(desc.get_longname())
+    print(desc.get_description())
+    print(desc.get_language())
+    
+#    name = "xkb:us::eng"    
+    name = "table:zhengma" #name = vim.eval("a:name")
+    engines = bus.get_engines_by_names([name])
+    size = len(engines)
+    if size <= 0:
+        print "Could not find engine %s" % name
+    else:
+        engine = engines[0]
+    ic.set_engine(engine)
+
+except Exception, e:
+    print "Failed to connect to iBus"
+    print e
+
+
+#+END_SRC
+
+
+** 另外一个(没有验证)
+
+#+BEGIN_SRC python
+try:
+  import ibus,dbus,vim
+  bus = ibus.Bus()
+  conn = bus.get_dbusconn().get_object(ibus.common.IBUS_SERVICE_IBUS, bus.current_input_contxt())
+  ic = dbus.Interface(conn, dbus_interface=ibus.common.IBUS_IFACE_INPUT_CONTEXT)
+  mode = vim.eval("a:mode")
+  ic.PropertyActivate("InputMode." + mode, ibus.PROP_STATE_CHECKED)
+except Exception, e:
+  print "Failed to connect to iBus"
+  print e
+
+#+END_SRC
+
+
+#+BEGIN_SRC python
+try:
+	import dbus, vim
+	import ctypes
+	dll = ctypes.CDLL("libibus-1.0.so")
+	get_addr = dll.ibus_get_address
+	get_addr.restype=ctypes.c_char_p
+
+	dbusconn = dbus.connection.Connection(get_addr())
+	ibus = dbus.Interface(dbusconn.get_object("org.freedesktop.IBus", "/org/freedesktop/IBus"), dbus_interface="org.freedesktop.IBus")
+	ic = dbus.Interface(dbusconn.get_object("org.freedesktop.IBus", ibus.CurrentInputContext()), dbus_interface="org.freedesktop.IBus.InputContext")
+	mode = vim.eval("a:mode")
+	ic.PropertyActivate("InputMode." + mode, 1)
+except Exception as e:
+	print("Failed to connect to iBus")
+print(e)
+
+#+END_SRC

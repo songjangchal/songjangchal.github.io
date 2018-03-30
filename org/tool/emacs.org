@@ -5,9 +5,193 @@
 * 扩展
   - yasnippet
 
+* epla
+ https://www.emacswiki.org/emacs/ELPA_(%e4%b8%ad%e6%96%87)
+
+  - package-user-dir(v)　包的安装目录，一般不需要改
+  - package-initialize(f) 加载包
+  - package-load-list(v)控制哪些包加载
+  - package-enable-at-startup 控制是否在启动时加载
+  - package-alist(v) 当前active的包
+  - define-package(f)
+  - autoload(f) 说明一个函数是自动加载自一个文件
+    文件名传入到load函数
+
+
+** 包的结构
+   以xxx包为例
+   - xxx-autoloads.el
+     定义autoload
+   - xxx-pkg.el
+     定义包的信息
+   - 包的源文件
+     
+** utils function
+   - add-hook
+   - eval-after-load
+     
+* 延时加载
+** autoload
+** auto-mode-alist
+   - add-to-list
+   - setq
+** interpreter-mode-alist
+** with-eval-after-load (eval-after-load)
+** add-hook
+
+
+* org 转义符
+
+\under{} 
+\plus{}
+
+https://emacs.stackexchange.com/questions/16688/how-can-i-escape-the-in-org-mode-to-prevent-bold-fontification
+
+ - org-entity
+   - org-entities-help (f)
+   - org-entities-user (v)
+
+
+
+
+#+BEGIN_SRC elisp
+
+(defun modi/org-entity-get-name (char)
+  "Return the entity name for CHAR. For example, return \"ast\" for *."
+  (let ((ll (append org-entities-user
+                    org-entities))
+        e name utf8)
+    (catch 'break
+      (while ll
+        (setq e (pop ll))
+        (when (not (stringp e))
+          (setq utf8 (nth 6 e))
+          (when (string= char utf8)
+            (setq name (car e))
+            (throw 'break name)))))))
+
+(defun modi/org-insert-org-entity-maybe (&rest args)
+  "When the universal prefix C-u is used before entering any character,
+    insert the character's `org-entity' name if available.
+
+    If C-u prefix is not used and if `org-entity' name is not available, the
+    returned value `entity-name' will be nil."
+  ;; It would be fine to use just (this-command-keys) instead of
+  ;; (substring (this-command-keys) -1) below in emacs 25+.
+  ;; But if the user pressed "C-u *", then
+  ;;  - in emacs 24.5, (this-command-keys) would return "^U*", and
+  ;;  - in emacs 25.x, (this-command-keys) would return "*".
+  ;; But in both versions, (substring (this-command-keys) -1) will return
+  ;; "*", which is what we want.
+  ;; http://thread.gmane.org/gmane.emacs.orgmode/106974/focus=106996
+  (let ((pressed-key (substring (this-command-keys) -1))
+        entity-name)
+    (when (and (listp args) (eq 4 (car args)))
+      (setq entity-name (modi/org-entity-get-name pressed-key))
+      (when entity-name
+        (setq entity-name (concat "\\" entity-name "{}"))
+        (insert entity-name)
+        (message (concat "Inserted `org-entity' "
+                         (propertize entity-name
+                                     'face 'font-lock-function-name-face)
+                         " for the symbol "
+                         (propertize pressed-key
+                                     'face 'font-lock-function-name-face)
+                         "."))))
+    entity-name))
+
+;; Run `org-self-insert-command' only if `modi/org-insert-org-entity-maybe'
+;; returns nil.
+(advice-add 'org-self-insert-command :before-until #'modi/org-insert-org-entity-maybe)
+
+#+END_SRC
+
+* org　常用　语法
+
+#+BEGIN_EXAMPLE
+   #+CAPTION: pdu格式
+#+END_EXAMPLE
+
+
+** macro 
+ 
+ #+MACRO: name   replacement text $1, $2 are arguments
+
+which can be referenced using ‘{{{name(arg1, arg2)}}}
+
+
+*** Define org mode macro with line breaks
+https://stackoverflow.com/questions/22132603/define-org-mode-macro-with-line-breaks
+
+
+
+
+
+#+BEGIN_VERSE
+
+#+MACRO: newline   src_emacs-lisp[:results raw]{"\n"}
+#+MACRO: img_dir pic/
+# #+MACRO: img  $1 {{{newline}}} tetetetetet
+# #+MACRO: img (eval "#+CAPTION: $1\nfile:./pic/$2")
+
+#+MACRO: img (eval "#+CAPTION: $1\n[[./pic/$2]]")  # valid
+#+END_VERSE
+
+** image size
+
+https://stackoverflow.com/questions/11670654/how-to-resize-images-in-org-mode
+
+
+#+BEGIN_EXAMPLE
+
+
+As per Jacobo's comment, add the following to your init.el file:
+
+(setq org-image-actual-width nil)
+
+Then in org-mode, you can use this for inline previews of JPGs and PNGs. Doesn't appear to work for SVGs (no idea why)
+
+#+ATTR_ORG: :width 100
+[[~/images/example.jpg]]
+
+and if you want to size this for both inline previews and html output:
+
+#+ATTR_HTML: width="100px"
+#+ATTR_ORG: :width 100
+[[~/images/example.jpg]]
+
+
+
+#+END_EXAMPLE
+
+#+ATTR_ODT: :scale 1
+
+** 头区域
+
+ type '#+', then to use 'M-<TAB>' for completion
+
+#+BEGIN_EXAMPLE
+
+   #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil arch:headline
+   #+OPTIONS: author:t c:nil creator:comment d:(not "LOGBOOK") date:t
+   #+OPTIONS: e:t email:nil f:t inline:t num:t p:nil pri:nil prop:nil
+   #+OPTIONS: stat:t tags:t tasks:t tex:t timestamp:t title:t toc:nil
+   #+OPTIONS: todo:t |:t
+   #+TITLE: 炎武ACU200系列区域控制单元嵌入式主控软件
+   #+DESCRIPTION:
+   #+KEYWORDS:
+   #+LANGUAGE: en
+   #+SELECT_TAGS: export
+   #+EXCLUDE_TAGS: noexport
+
+#+END_EXAMPLE
+
 * 一些参考
   - https://github.com/martyr-deepin/deepin-emacs
 
 ** org
    - http://orgmode.org/worg/
    - http://sachachua.com/
+
+** emacs china
+http://book.emacs-china.org/

@@ -1,0 +1,68 @@
+
+* hhkb下　disable power键
+
+xev
+evtest 查看操作事件
+
+
+
+https://unix.stackexchange.com/questions/106468/remapping-power-key-to-delete
+** xkb
+#+BEGIN_EXAMPLE
+key <POWR> { [ prior] } //不管用
+#+END_EXAMPLE
+
+keycode = 124
+
+** /etc/systemd/logind.conf
+
+#+BEGIN_SRC 
+HandlePowerKey=ignore
+#+END_SRC
+
+
+
+systemd can handle this. I think this is what you need:
+
+Open the /etc/systemd/logind.conf (manual):
+
+    HandlePowerKey: action on power key is pressed;
+    HandleSuspendKey: action on suspend key is pressed.
+    HandleHibernateKey: action on hibernate key is pressed.
+    HandleLidSwitch: action when the lid is closed.
+
+The action can be one of ignore, poweroff, reboot, halt, suspend, hibernate or kexec.
+
+If no configuration, default values used:
+
+    HandlePowerKey=poweroff
+    HandleSuspendKey=suspend
+    HandleHibernateKey=hibernate
+    HandleLidSwitch=suspend
+
+
+
+** Change Behavior of Linux Power Button
+
+https://superuser.com/questions/699905/change-behavior-of-linux-power-button
+
+
+Well, one thing you could do is simply disable the power button altogether. Personally, I only use it to turn on my machine, and never use it once the machine is on. If this is an OK solution for you, edit /etc/acpi/events/powerbtn-acpi-support:
+
+sudo nano /etc/acpi/events/powerbtn-acpi-support
+
+That file should look something like this:
+
+event=button[ /]power
+action=/etc/acpi/powerbtn-acpi-support.sh
+
+To make the power button do nothing, change it to:
+
+event=button[ /]power
+action=
+
+Then restart the acpi daemon with
+
+sudo service acpid restart
+
+Your power button should no be ignored.

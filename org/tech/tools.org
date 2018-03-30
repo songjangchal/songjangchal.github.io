@@ -1,0 +1,101 @@
+#+title: 工具类
+
+* socat
+  简单来说是将两个通信的通道连结在一起，这两个可以是文件，tcp, serial port等
+
+  下面是简单的例子，用python写的，目的是为了测试,将串口上的信息，发到tcp连接上.
+  
+#+BEGIN_SRC 
+ socat -d -d -d pty,raw,echo=0 TCP4-LISTEN:5555,reuseaddr,fork
+#+END_SRC
+
+for选项是为了tcp client退出时，如果没有指明是fork,则socat退出，指明了则生成子进程，退出时也是子进程退出。
+
+
+#+BEGIN_SRC python
+
+
+from ctypes import *
+import socket
+import struct
+import platform
+import time
+import threading
+
+import serial
+
+
+class Transporter():
+    def __init__(self):
+        pass
+    
+    def recv(self,size):
+        return None
+    def send(self, data):
+        pass
+
+    def connect(self):
+        pass
+
+class SocketTransporter(Transporter):
+    def __init__(self, addr, port):
+        self.addr = addr
+        self.port = port
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    def recv(self, size):
+        data = self.socket.recv(size)        
+        return data
+
+    def send(self, data):
+        self.socket.send(data)
+
+    def connect(self):        
+        address = (self.addr, self.port)
+        self.socket.connect(address)
+        
+
+
+class SerialTransporter(Transporter):
+    def __init__(self, port, baudrate=9600):
+        try:
+            self.serial_port = serial.Serial(
+                port=port,
+                baudrate=baudrate,
+                parity=serial.PARITY_NONE,
+                stopbits=1,
+                timeout=0.5
+            )
+        except (FileNotFoundError, serial.serialutil.SerialException):
+            raise SerialException("Error opening serial port: %s" % port)
+
+    def recv(self, size):
+        data = self.serial_port.read(size)        
+        return data
+
+    def send(self, data):
+        self.serial_port.write(data)
+
+    def connect(self):        
+        pass
+        
+
+n_transporter = SocketTransporter("127.0.0.1", 5555)
+
+n_transporter.connect()
+
+s_transporter = SerialTransporter("/dev/pts/4")
+
+s_transporter.send(b"test")
+
+data = n_transporter.recv(10)
+
+print("data:", data)
+
+# while(True):
+#    time.sleep(5)
+
+
+#+END_SRC
+* the silver searcher
+

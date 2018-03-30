@@ -8,3 +8,39 @@
 * flow.js vs typescript
 
 * clojurescript, elm, purescript
+
+* js　一些开源代码
+** electron
+   - N1
+   - webtorrent
+   - angular2-electron
+   - electron-elm
+   - laverna
+   - mojibar
+   - onshape-desktop-shell
+   - vscode
+   - friends
+
+
+** vue
+   - CoreUI
+   - element
+   - vue-element
+   - vue-admin
+   - quasar
+   - webpack
+   - vue2-elm
+   - axios
+   - electron-vue
+   - vue-easytable
+   - vue-objccn
+
+   
+** angular
+   - ng2-admin
+   - ng2-admin-lte
+   - angular-seed
+   - NiceFish
+   - NiceBlogElectron
+   - nylas-mail
+

@@ -1,0 +1,42 @@
+#+title: 项目管理相关
+
+* task juggler
+ - https://github.com/lujianmei/taskjuggler-manage-projects
+** export to ms project
+*** 工期有小数点问题
+  当加入
+#+BEGIN_EXAMPLE
+workinghours mon - fri 8:30 - 12:00, 13:00 - 17:00    
+#+END_EXAMPLE
+
+无论时间段改成什么样，都会有小数点，
+但是把这个去掉就好了，
+
+
+
+把这个改成下面的也没问题，但时间段也不能改，改了还是变成小数点
+这个是ms project的默认设置，保持和它一致就没问题
+#+BEGIN_EXAMPLE
+
+    workinghours mon - fri 9:00 - 17:00
+#+END_EXAMPLE
+
+** 多行文本 (multi line text)
+ cut mark strings
+
+#+BEGIN_EXAMPLE
+
+  -8<-
+  # This is a
+  # multi-line
+  # string.
+  ->8-
+
+#+END_EXAMPLE
+
+
+* drawing
+
+** 两个参考图网站
+   - www.draw.io
+   - https://www.processon.com/

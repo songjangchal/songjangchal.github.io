@@ -1,0 +1,10 @@
+#+title: gitit,pandoc
+
+* 文字加顔色
+使用span + css, 原有的<font>标签已经不再推荐使用
+
+#+BEGIN_SRC 
+  <span style="color:red; font-size:large"> 
+  **最终结论: 成本高没有优势，仍采用以前的ＡＴＡ＋模拟电话方案**
+  <span>
+#+END_SRC

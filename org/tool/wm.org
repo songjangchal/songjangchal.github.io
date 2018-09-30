@@ -1,0 +1,13 @@
+#+title: window manager and relative things
+
+
+* conky
+  - Task manager: https://en.wikipedia.org/wiki/Task_manager
+  - System monitor: https://en.wikipedia.org/wiki/System_monitor
+* stalonetray
+  - --window-strut
+    之前这个参数一直都设置成none, 以前在xmonad里没有问题， dzen和stalonetry都是不会被覆盖的。
+    有一次升级后，突然就被覆盖了。
+    一次偶然发现，把这个参数去掉就好了。估计是设成none后，xmonad不会给它留空间。
+    以后设置成auto或者去掉都可以.
+

@@ -4,6 +4,11 @@
 
 * 扩展
   - yasnippet
+  - treemacs
+  - ace-window
+    http://sachachua.com/blog/2015/01/emacs-microhabit-switching-windows-windmove-ace-window-ace-jump/
+    Windmove lets you move around with cursor keys, if you set up the appropriate keyboard shortcuts. Ace-window works like ace-jump. In addition, you can use C-u to swap windows and C-u C-u to delete windows. Ace-jump works across windows, so that’s handy too.
+
 
 * epla
  https://www.emacswiki.org/emacs/ELPA_(%e4%b8%ad%e6%96%87)
@@ -185,6 +190,74 @@ and if you want to size this for both inline previews and html output:
    #+EXCLUDE_TAGS: noexport
 
 #+END_EXAMPLE
+
+* execute a emacs code in command line 
+
+#+BEGIN_EXAMPLE
+
+
+emacs myorgfile.org --batch -f org-html-export-to-html --kill
+#+END_EXAMPLE
+
+
+make file 
+
+#+BEGIN_SRC makefile
+
+OUT_DIR=/some/output/dir/html
+# Using GNU Make-specific functions here
+FILES=$(patsubst %.org,$(OUT_DIR)/%.html,$(wildcard *.org))
+
+.PHONY: all clean install-doc
+
+all: install-doc
+
+install-doc: $(OUT_DIR) $(FILES)
+
+$(OUT_DIR):
+        mkdir -v -p $(OUT_DIR)
+
+%.html: %.org
+        emacs $< --batch -f org-html-export-to-html--kill
+
+$(OUT_DIR)/%.html: %.html
+        install -v -m 644 -t $(OUT_DIR) $<
+        rm $<
+
+clean:
+        rm *.html
+
+#+END_SRC
+
+
+#+BEGIN_SRC lisp
+
+
+
+(defun export (tagname)
+   "Export to a file named tagname.pdf all the headlines tagged with tagname"
+      (let ((org-export-select-tags (list tagname)) (async nil) (subtreep nil) (visible-only nil) (body-only nil) (ext-plist '()))
+             (org-beamer-export-to-pdf async subtreep visible-only body-only ext-plist)
+    )
+      (cond ((file-exists-p (concat tagname ".pdf")) (delete-file (concat tagname ".pdf"))))
+      (rename-file "sample.pdf" (concat tagname ".pdf"))
+)
+
+(export "s1")
+(export "s2")
+
+
+(defun export2 (tagname)
+   "Export to a file named tagname.pdf all the headlines tagged with tagname"
+      (let ((org-export-select-tags (list tagname)) (async nil) (subtreep nil) (visible-only nil) (body-only nil) (ext-plist '())) 
+           (org-export-to-file 'beamer (concat tagname ".tex") async subtreep visible-only body-only ext-plist (lambda (file) (org-latex-compile file))))
+)
+
+(export2 "s1")
+(export2 "s2")
+
+#+END_SRC
+
 
 * 一些参考
   - https://github.com/martyr-deepin/deepin-emacs

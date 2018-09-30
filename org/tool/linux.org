@@ -66,3 +66,73 @@ Then restart the acpi daemon with
 sudo service acpid restart
 
 Your power button should no be ignored.
+
+* Mojo-Webqq
+* virtualbox
+** 设置远程vnc，密码
+
+#+BEGIN_EXAMPLE
+pacman -S  virtualbox-ext-vnc
+#+END_EXAMPLE
+
+port:3389
+
+#+BEGIN_EXAMPLE
+
+VBoxManage modifyvm "VM name" --vrdeproperty VNCPassword=psw
+
+#+END_EXAMPLE
+
+** 操作
+
+Say we want to run the "Ubuntu Server" VM as a headless instance. To do this, you would issue the command:
+
+#+BEGIN_SRC 
+VBoxManage startvm "win7" --type headless
+VBoxManage controlvm "win7" savestate --type headless
+#+END_SRC
+
+The VM will start up and hand you back your bash prompt. Your virtual server (if that's how you're using the VM) is now available to you.
+
+If you need to pause that VM, issue the command:
+
+#+BEGIN_SRC 
+VBoxManage controlvm "Ubuntu Server" pause --type headless
+#+END_SRC
+
+
+To restart that paused VM, issue the command:
+
+#+BEGIN_SRC 
+VBoxManage controlvm "Ubuntu Server" resume --type headless
+#+END_SRC
+
+To shut down the VM, issue the command:
+
+#+BEGIN_SRC 
+VBoxManage controlvm "Ubuntu Server" poweroff --type headless
+#+END_SRC
+
+** wake on lan
+https://wiki.archlinux.org/index.php/Wake-on-LAN
+
+
+motherboard and Network Interface Controller have to support Wake-on-LAN.
+
+#+BEGIN_EXAMPLE
+
+cat /proc/acpi/wakeup
+#+END_EXAMPLE
+
+
+192.168.62.26 maca
+
+#+BEGIN_EXAMPLE
+ a4:1f:72:59:d1:84 
+
+#+END_EXAMPLE
+
+* xdg-utils
+ Command line tools that assist applications with a variety of desktop integration tasks
+** xdg-mime
+   

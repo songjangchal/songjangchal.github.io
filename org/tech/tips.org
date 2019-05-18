@@ -255,3 +255,214 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__MY_FILE__='\"$(notdir $(abspath $<))
 #+END_SRC
 
 
+* c++11
+
+** New string literals
+#+BEGIN_EXAMPLE
+
+
+
+
+C++11 supports three Unicode encodings: UTF-8, UTF-16, and UTF-32. Along with the formerly noted changes to the definition of char, C++11 adds two new character types: char16_t and char32_t. These are designed to store UTF-16 and UTF-32 respectively.
+
+Creating string literals for each of these encodings can be done thusly:
+
+u8"I'm a UTF-8 string."
+u"This is a UTF-16 string."
+U"This is a UTF-32 string."
+
+The type of the first string is the usual const char[]. The type of the second string is const char16_t[] (note lower case 'u' prefix). The type of the third string is const char32_t[] (upper case 'U' prefix).
+
+When building Unicode string literals, it is often useful to insert Unicode code points directly into the string. To do this, C++11 allows this syntax:
+
+u8"This is a Unicode Character: \u2018."
+u"This is a bigger Unicode Character: \u2018."
+U"This is a Unicode Character: \U00002018."
+
+The number after the \u is a hexadecimal number; it does not need the usual 0x prefix. The identifier \u represents a 16-bit Unicode code point; to enter a 32-bit code point, use \U and a 32-bit hexadecimal number. Only valid Unicode code points can be entered. For example, code points on the range U+D800–U+DFFF are forbidden, as they are reserved for surrogate pairs in UTF-16 encodings.
+
+It is also sometimes useful to avoid escaping strings manually, particularly for using literals of XML files, scripting languages, or regular expressions. C++11 provides a raw string literal:
+
+R"(The String Data \ Stuff " )"
+R"delimiter(The String Data \ Stuff " )delimiter"
+
+In the first case, everything between the "( and the )" is part of the string. The " and \ characters do not need to be escaped. In the second case, the "delimiter( starts the string, and it ends only when )delimiter" is reached. The string delimiter can be any string up to 16 characters in length, including the empty string. This string cannot contain spaces, control characters, (, ), or the \ character. Using this delimiter string allows the user to have ) characters within raw string literals. For example, R"delimiter((a-z))delimiter" is equivalent to "(a-z)".[4]
+
+Raw string literals can be combined with the wide literal or any of the Unicode literal prefixes:
+
+u8R"XXX(I'm a "raw UTF-8" string.)XXX"
+uR"*(This is a "raw UTF-16" string.)*"
+UR"(This is a "raw UTF-32" string.)"
+
+#+END_EXAMPLE
+* debug shared library on linux
+  现象：
+     动态库更改后，马上运行执行程序，更改的动态库不会加载，
+     估计是系统为了加快程序启动，没有删除原来的动态库，当发现原来的动态库文件还在，就用缓存中的动态库文件了。
+  - 先把library 删除
+  - 再把执行程序执行一次，报错，这时系统会把动态库删除
+  - 再次生成动态库，库能正确加载
+
+* c++ reference
+https://en.wikipedia.org/wiki/Reference_(C%2B%2B)
+
+   - Relationship to pointers
+     - It is not possible to refer directly to a reference object after it is defined; any occurrence of its name refers directly to the object it references.
+     - Once a reference is created, it cannot be later made to reference another object; it cannot be reseated. This is often done with pointers.
+     - References cannot be null, whereas pointers can; every reference refers to some object, although it may or may not be valid. Note that for this reason, containers of references are not allowed.
+     - References cannot be uninitialized. Because it is impossible to reinitialize a reference, they must be initialized as soon as they are created. In particular, local and global variables must be initialized where they are defined, and references which are data members of class instances must be initialized in the initializer list of the class's constructor. For example: 
+     
+
+** c++ reference 
+https://isocpp.org/wiki/faq/references
+
+  - Use references when you can, and pointers when you have to.
+
+  - What does it mean that a reference must refer to an object, not a dereferenced null pointer?
+
+
+
+* xsde 调试经验
+  - 用内存区域调用解析接口时，不要包含字符结尾 '0'
+如
+#+BEGIN_SRC c++
+unsigned char net_element[] = R"(<railML>
+    <functionalInfrastructure> <!--功能设施 -->
+      <tracks>  <!--轨道定义 -->
+      </tracks>
+      <speeds>  <!--速度表 -->
+      </speeds>
+      <signals> <!--校正点 -->
+      </signals>
+    </functionalInfrastructure>        
+  </infrastructure>
+</rail>)";
+    Rail rail;
+    int rc = rail.ReadXml(net_element, sizeof(net_element) - 1);
+
+#+END_SRC
+
+长度是sizeof(net_element) - 1)时， 运行正确，而改成
+
+#+BEGIN_EXAMPLE
+sizeof(net_element)
+#+END_EXAMPLE
+
+时，运行时会出现如下错误
+
+#+BEGIN_EXAMPLE
+not well-formed (invalid token)
+#+END_EXAMPLE
+
+
+
+* c++中小数的比较
+
+使用c++标准函数
+| 函数名              | 代替 |
+| isgreater(a,b)      | >    |
+| isless(a,b)         | <    |
+| isgreaterequal(a,b) | >=   |
+| islessequal(a,b)    | <=   |
+| islessgreater(a,b)  | !=   |
+
+ **在catch里测试 islessgreater 不起作用， 所以不用这个函数作相等判断情况.**
+
+#+BEGIN_SRC c++
+isgreater(a,b)
+isless(a,b)
+isgreaterequal(a,b)
+islessequal(a,b)
+islessgreater(a,b)
+
+a,b可以为float, double, long double类型
+
+#+END_SRC
+
+http://www.cplusplus.com/reference/limits/numeric_limits/
+#+BEGIN_SRC c++ 
+std::numeric_limits<double>::epsilon()
+#+END_SRC
+
+** https://stackoverflow.com/questions/17333/what-is-the-most-effective-way-for-float-and-double-comparison
+
+
+#+BEGIN_VERSE
+
+Be extremely careful using any of the other suggestions. It all depends on context.
+
+I have spent a long time tracing a bugs in a system that presumed a==b if |a-b|<epsilon. The underlying problems were:
+
+    The implicit presumption in an algorithm that if a==b and b==c then a==c.
+
+    Using the same epsilon for lines measured in inches and lines measured in mils (.001 inch). That is a==b but 1000a!=1000b. (This is why AlmostEqual2sComplement asks for the epsilon or max ULPS).
+
+    The use of the same epsilon for both the cosine of angles and the length of lines!
+
+    Using such a compare function to sort items in a collection. (In this case using the builtin C++ operator == for doubles produced correct results.)
+
+Like I said: it all depends on context and the expected size of a and b.
+
+BTW, std::numeric_limits<double>::epsilon() is the "machine epsilon". It is the difference between 1.0 and the next value representable by a double. I guess that it could be used in the compare function but only if the expected values are less than 1. (This is in response to @cdv's answer...)
+
+Also, if you basically have int arithmetic in doubles (here we use doubles to hold int values in certain cases) your arithmetic will be correct. For example 4.0/2.0 will be the same as 1.0+1.0. This is as long as you do not do things that result in fractions (4.0/3.0) or do not go outside of the size of an int
+
+#+END_VERSE
+
+
+#+BEGIN_VERSE
+
+
+
+Comparing floating point numbers for depends on the context. Since even changing the order of operations can produce different results, it is important to know how "equal" you want the numbers to be.
+
+Comparing floating point numbers by Bruce Dawson is a good place to start when looking at floating point comparison.
+
+The following definitions are from The art of computer programming by Knuth:
+
+bool approximatelyEqual(float a, float b, float epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool essentiallyEqual(float a, float b, float epsilon)
+{
+    return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool definitelyGreaterThan(float a, float b, float epsilon)
+{
+    return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+bool definitelyLessThan(float a, float b, float epsilon)
+{
+    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+}
+
+Of course, choosing epsilon depends on the context, and determines how equal you want the numbers to be.
+
+Another method of comparing floating point numbers is to look at the ULP (units in last place) of the numbers. While not dealing specifically with comparisons, the paper What every computer scientist should know about floating point numbers is a good resource for understanding how floating point works and what the pitfalls are, including what ULP is.
+
+
+#+END_VERSE
+
+
+
+** 
+
+#+BEGIN_SRC c++ 
+// Test whether two float or double numbers are equal.
+// ulp: units in the last place.
+template <typename T>
+typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type
+IsAlmostEqual(T x, T y, int ulp = 2)
+{
+    // the machine epsilon has to be scaled to the magnitude of the values used
+    // and multiplied by the desired precision in ULPs (units in the last place)
+    return std::fabs(x - y) < std::numeric_limits<T>::epsilon() * std::fabs(x + y) * ulp
+           // unless the result is subnormal
+           || std::fabs(x - y) < std::numeric_limits<T>::min();
+}
+
+#+END_SRC

@@ -135,4 +135,325 @@ cat /proc/acpi/wakeup
 * xdg-utils
  Command line tools that assist applications with a variety of desktop integration tasks
 ** xdg-mime
-   
+* 设置鼠标速度
+  https://wiki.archlinux.org/index.php/Libinput
+
+  https://wayland.freedesktop.org/libinput/doc/latest/pointer-acceleration.html
+
+#+BEGIN_EXAMPLE
+
+
+#+END_EXAMPLE
+
+
+
+* rename    
+
+** per-rename
+
+http://www.cnblogs.com/hester/p/5615871.html
+
+nam perl-rename
+
+#+BEGIN_EXAMPLE
+
+还有几个好玩的例子：
+比如统一在文件头部添加上hello 
+rename         's/^/hello/'       *
+统一把.html扩展名修改为.htm
+rename          's/.html$/.htm/'      *
+统一在尾部追加.zip后缀：
+rename          's/$/.zip/'      *
+统一去掉.zip后缀：
+ 
+rename          's/.zip$//'      *
+ 
+规则化数字编号名，比如1.jpg, 2.jpg ..... 100.jpg , 现在要使文件名全部三位即1.jpg .... 001.jpg
+ 
+运行两次命令：
+ 
+rename           's/^/00/'          [0-9].jpg     # 这一步把1.jpg ..... 9.jpg 变幻为001.jpg .... 009.jpg
+ 
+rename            's/^/0/'           [0-9][0-9].jpg   # 这一步把10.jpg ..... 99.jpg 变幻为010.jpg ..... 090.jpg
+
+#+END_EXAMPLE
+
+
+
+
+* 安装macos on virtualbox
+
+https://www.tactig.com/how-to-install-macos-high-sierra-10-13-on-virtualbox/
+修改虚拟机文件
+
+#+BEGIN_SRC bash
+
+VBoxManage modifyvm "macos" --cpuidset 00000001 000106e5 00100800 0098e3fd bfebfbff
+VBoxManage setextradata "macos" "VBoxInternal/Devices/efi/0/Config/DmiSystemProduct" "iMac11,3"
+VBoxManage setextradata "macos" "VBoxInternal/Devices/efi/0/Config/DmiSystemVersion" "1.0"
+VBoxManage setextradata "macos" "VBoxInternal/Devices/efi/0/Config/DmiBoardProduct" "Iloveapple"
+VBoxManage setextradata "macos" "VBoxInternal/Devices/smc/0/Config/DeviceKey" "ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
+VBoxManage setextradata "macos" "VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC" 1
+
+
+
+#+END_SRC
+
+** 分辨率
+#+BEGIN_SRC 
+
+VBoxManage setextradata "macos" "VBoxInternal2/EfiGraphicsResolution" "1600x900"
+
+#+END_SRC
+* macos上的xev软件
+  - keycodes
+  
+* linux 访问iphone
+
+#+BEGIN_VERSE
+
+准备工作
+
+1.在iphone弹出信任窗口一定要信任;
+
+
+
+2.安装ifuse
+
+sudo apt-get install ifuse
+
+3.创建一个挂载点(随便创建，我在/media目录下创建了ｕ目录)
+
+sudo mkdir /media/u
+
+4.使用ifuse挂载
+
+ifuse /media/u
+
+此时提示如下:
+
+fusermount: failed to open /etc/fuse.conf: Permission denied
+fusermount: user has no write access to mountpoint /media/u
+解决方案:
+
+sudo chmod 777 /media/u
+
+再试着挂载:
+
+ifuse /media/u
+
+
+#+END_VERSE
+
+http://www.cnblogs.com/dakewei/p/6849073.html
+https://www.dedoimedo.com/computers/linux-iphone-6.html
+* OCR
+https://help.ubuntu.com/community/OCR
+
+#+BEGIN_SRC 
+    fuzzyocr - spamassassin plugin to check image attachments
+
+    gocr - a command line OCR
+
+    libhocr0 - Hebrew OCR
+
+    ocrad - OCR program
+
+    ocrfeeder - document layout analysis and optical character recognition system
+
+    ocropus - document analysis and OCR system
+
+    tesseract-ocr - command line OCR 
+
+The Ubuntu multiverse respositories also contain:
+
+    cuneiform - multi-language OCR system 
+
+#+END_SRC
+** tesseract
+  - gimagereader
+  - tesseract-data-chi_sim
+  - tesseract-data-chi_tra
+  -  hunspell-<lang>
+
+* dwg 文件
+ 
+https://askubuntu.com/questions/410090/preview-of-cad-files-in-format-dwg
+
+#+BEGIN_VERSE
+
+
+You can use QCAD, an open source AutoCAD replacement or the community fork LibreCAD made to work using the newer Qt4 framework. You can install LibreCAD from the Ubuntu Software Center. Using one of these two programs you import DWG files, edit the drawing and export it to PDF.
+
+LibreCAD screenshot
+
+QCad offered a command line tool to convert DWG to PDF directly - I'm guessing it's also available in LibreCAD.
+
+./dwg2pdf.sh drawing.dwg
+
+
+
+
+#+END_VERSE
+
+不能工作
+* iphone org-mode
+
+http://lists.gnu.org/r/emacs-orgmode/2009-03/msg00690.html
+
+#+BEGIN_VERSE  markdown
+
+Table of Contents
+=================
+1 Basic principles
+   1.1 Simplicity
+   1.2 Forget Synchronization
+   1.3 Offline
+2 Main features
+   2.1 Capture
+   2.2 Display of current tasks
+   2.3 Flagging
+3 Implementation proposal
+   3.1 Main screen
+   3.2 Data Desktop->iPod
+   3.3 Data iPhone->Desktop
+4 The experience on the Emacs side
+
+
+1 Basic principles
+~~~~~~~~~~~~~~~~~~~
+
+1.1 Simplicity
+===============
+  Don't even think about re-creating Org-mode for the
+  iPhone/iPod.  If this is what you want, get a mobile
+  device that runs Emacs.
+
+  Too many companies have tried to duplicate their desktop
+  experience on the iPhone, and most have, in my opinion
+  failed.  If you look at the iPhone versions of Things,
+  OmniFocus, Evernote, you name it, all of them are too
+  complicated for the touch interface.  Simplicity is the
+  absolute key to make things work on that platform.  When
+  I am trying to enter a new note in Evernote, for example,
+  it drives me crazy that I have to tap on the title
+  filed, just to start entering a title, then tap done,
+  then tap a date field, use some unpleasant interface to
+  select a date, then tap done, all of this before I have
+  even started to write my note.
+
+  Apples Notes app does that right, tap "+" to create a
+  note, and then type away, title automatically extracted
+  from the first line, done.
+
+1.2 Forget Synchronization
+===========================
+  I believe that something that does direct, 2-way
+  synchronization between Org and a mobile app will be very
+  hard to get right.  Instead, I propose a two data
+  streams, one from the desktop to the app, one back.
+
+1.3 Offline
+============
+  I believe it is essential that this app works offline as
+  well.  You could be on a plane, or, more importantly, you
+  could be an iPod Touch user (I am), unwilling to pay $30
+  or more per month to keep your data service running.
+
+  I am an offline user.  I downloaded most of Wikipedia
+  onto the Touch, and being able to use the app offline I
+  see as an essential feature.
+
+2 Main features
+~~~~~~~~~~~~~~~~
+
+2.1 Capture
+============
+  Create new Org entries like notes in as primitive a way
+  as possible.
+
+2.2 Display of current tasks
+=============================
+  List the most recent agenda view from the desktop,
+  including the task list and whatever other views you have
+  configured for this.  Just one simple list to rule them
+  all, maybe with toolbar buttons to jump to the agenda
+  section, the task list section, etc.  Simplicity!
+
+2.3 Flagging
+=============
+  In the list of tasks, have at most two buttons for each
+  task.  Actually I would be satisfied only the first
+  one, but might like the second one.  Here are the buttons:
+
+  1. Flag entry for later attention when I am back at my
+     desktop
+  2. Done, get it out of my sight without further
+     interaction.  Precise action to be defined in Emacs.
+
+
+3 Implementation proposal
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+3.1 Main screen
+================
+  Directly into the task list, with a top level button to
+  create a new task/note, maybe in the tool bar at the
+  bottom of the page.
+
+3.2 Data Desktop->iPod
+=======================
+  Make Emacs automatically create a special agenda-like
+  view, containing the agenda for the coming week, and
+  current task.  We can configure this in Emacs, and I can
+  push out this list in any desired format.  Each entry
+  listed will be forced to have an ID, for unique
+  identification.
+
+  I don't know how to get this list onto the iPhone, maybe
+  the easiest would be to mount the iPhone via WiFi and to
+  push a single file onto it.  Apps like Datacase do this
+  kind of a thing.
+
+3.3 Data iPhone->Desktop
+=========================
+  The iPhone app should create a single file like an RSS
+  feed.  This feed would contain two kinds of items
+  1. New entries captured.  We could be really clever on
+     the Desktop/Emacs side in parsing these new entries,
+     extracting free form dates from things like +2Fri
+     etc.  Now stupid date input forms on the iPhone, just
+     free typing and clever interpretation.
+  2. IDs of flagged entries.  The next time at your
+     Desktop, Emacs will make an agenda view listing all
+     the flagged entries, and then you can archive them,
+     add notes, changes states, from you memory.  You will
+     do this in the full environment provided by Emacs, not
+     on a crippled interface.  In this way, the lack of
+     synchronization will be a feature, not a bug.
+
+4 The experience on the Emacs side
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1. When you start Org-mode, we would check if the iPhone is
+    mounted.  If yes, we would periodically (with a timer)
+    create the latest best agenda view and push it onto the
+    device, so that you have a fresh version when you
+    disconnect.
+ 2. If the phone is mounted, Emacs would check if the
+    "feed" file exists.  If yes, it would read it and
+    remove it from the iPhone so that new entries will
+    create a new feed file.  Emacs would add the new node
+    to an inbox (like org-feed.el does now for RSS feeds).
+    It would mark and archive (or whatever you configure
+    for this) the entries flagged as "get out of my
+    sight".  And it would store the list of IDs of entries
+    that require "attention", and will offer agenda views
+    based on this list.
+
+This is it.  This would make me happy.  I would of course
+be willing to handle the entire Emacs side of this.
+
+Comments?
+
+#+END_VERSE
+

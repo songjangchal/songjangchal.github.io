@@ -1,6 +1,18 @@
 #+title: emacs 相关
 
-* 
+* 守护进程 (daemon)
+
+#+BEGIN_EXAMPLE
+systemctl --user  enable emacs.service
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+
+emacsclient      # in terminal
+emacsclient -c   # in gui
+
+#+END_EXAMPLE
+
 
 * 扩展
   - yasnippet
@@ -269,6 +281,213 @@ clean:
 (export2 "s2")
 
 #+END_SRC
+
+
+* 中英文对齐
+install: ttf-ubuntu-font-family
+
+设置系统字体
+可以只设置table  字体
+
+default ---> org-table
+
+
+字号12
+
+#+BEGIN_EXAMPLE
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 120 :width normal)))))
+
+#+END_EXAMPLE
+
+字号9
+#+BEGIN_EXAMPLE
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 90 :width normal)))))
+
+#+END_EXAMPLE
+
+字号6
+#+BEGIN_EXAMPLE
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 60 :width normal)))))
+
+#+END_EXAMPLE
+
+
+
+** 参考
+#+BEGIN_EXAMPLE
+
+手机，所以只说一个最简单的方法:把字体换成 ubuntu mono 或者文泉驿正黑，什么配置都不用做就可以了
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+
+分别设置中英文的大小，我的设置如下：
+
+(set-face-attribute 'default nil :font
+                    (format   "%s:pixelsize=%d" "Source Code Pro" 17))
+(dolist (charset '(kana han cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family "微软雅黑" :size 20)))
+
+
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+Chinese-fonts-setup 244
+
+解决 org 中英文对齐的神器
+
+我英文Monaco 14，中文STFangsong 16，效果很不错
+
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+
+如图，单独设置org-table的字体就行
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-table ((t (:foreground "#6c71c4" :family "Ubuntu Mono")))))
+
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+
+(setq fonts
+      (cond ((eq system-type 'darwin)     '("Monaco"    "STHeiti"))
+            ((eq system-type 'gnu/linux)  '("Menlo"     "WenQuanYi Zen Hei"))
+            ((eq system-type 'windows-nt) '("Consolas"  "Microsoft Yahei"))))
+(set-face-attribute 'default nil :font
+                    (format "%s:pixelsize=%d" (car fonts) 14))
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family (car (cdr fonts)))))
+;; Fix chinese font width and rescale
+(setq face-font-rescale-alist '(("Microsoft Yahei" . 1.2) ("WenQuanYi Micro Hei Mono" . 1.2) ("STHeiti". 1.2)))
+#+END_EXAMPLE
+
+
+#+BEGIN_EXAMPLE
+
+另外，除了他说的：
+　　{"Dejavu Sans Mono 10" 与 "WenQuanyi Micro Hei Mono 12"}
+　　{"Consolas 11" 与 "Microsoft Yahei 16"}
+　　{"Liberation Mono 12" 与 "WenQuanYi Micro Hei Mono 15"}
+可以实现中英文混排表格的对齐，我使用的：
+　　{"Dejavu Sans Mono 12" 与 "WenQuanyi Micro Hei Mono 15"}
+也可以实现此效果。 
+#+END_EXAMPLE
+
+
+
+** cnfonts   
+https://github.com/tumashu/cnfonts
+
+
+* org-capture(firefox) org-protocol
+** 
+https://github.com/alphapapa/org-protocol-capture-html
+
+**** Init file
+
+Add to your Emacs init file:
+
+#+BEGIN_SRC elisp
+    (server-start)
+    (require 'org-protocol)
+#+END_SRC
+
+**** Capture template
+
+You'll probably want to add a capture template something like this:
+
+#+BEGIN_SRC elisp
+  ("w" "Web site"
+   entry (file+olp "~/org/inbox.org" "Web")
+   "* %c :website:\n%U %?%:initial")
+#+END_SRC
+
+*Note:* Using =%:initial= instead of =%i= seems to handle multi-line content better.
+
+This will result in a capture like this:
+
+#+BEGIN_SRC org
+   * [[http://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol.el – Intercept calls from emacsclient to trigger custom actions]] :website:
+   [2015-09-29 Tue 11:09] About org-protocol.el org-protocol.el is based on code and ideas from org-annotation-helper.el and org-browser-url.el.
+#+END_SRC
+
+*** 3. Configure Firefox
+
+On some versions of Firefox, it may be necessary to add this setting. You may skip this step and come back to it if you get an error saying that Firefox doesn't know how to handle =org-protocol= links.
+
+Open =about:config= and create a new =boolean= value named =network.protocol-handler.expose.org-protocol= and set it to =true=.
+
+*Note:* If you do skip this step, and you do encounter the error, Firefox may replace all open tabs in the window with the error message, making it difficult or impossible to recover those tabs. It's best to use a new window with a throwaway tab to test this setup until you know it's working.
+
+** org-capture-extension
+https://github.com/sprig/org-capture-extension
+** 在现在的版本中会有capture出鏎的情况
+   在capture时会出错, char-or-string-p, nil的错误出现
+
+经过尝试， 当king ring里有东西时不会出错， 但capture时也会像"C-y"的快捷键，把king ring里的东西放在capture 的前面。
+  有一种方法解决这个问题
+  - 就是先删除一个空格符到，"kill ring"里, 这样就只有一个空格符copy过来
+
+
+ *现在我把template 改成下面的又好了*
+
+
+#+BEGIN_EXAMPLE
+
+(setq org-capture-templates `(
+	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+         "* %^{Title}\nSource: [[%:link][%:description]], %u\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+         "* %? [[%:link][%:description]] \nCaptured On: %U")
+))
+
+
+#+END_EXAMPLE
+
+原来的是这样
+
+#+BEGIN_EXAMPLE
+(setq org-capture-templates `(
+	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")	
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %? [[%:link][%:description")]]\n")
+))
+
+#+END_EXAMPLE
+
+\nSource: %u, %c 替换成 :
+#+BEGIN_EXAMPLE
+ [[%:link][%:description]], %u
+#+END_EXAMPLE
+
+感觉和%c这个参数有关
 
 
 * 一些参考

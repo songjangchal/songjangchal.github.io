@@ -137,6 +137,13 @@ https://emacs.stackexchange.com/questions/16688/how-can-i-escape-the-in-org-mode
 which can be referenced using ‘{{{name(arg1, arg2)}}}
 
 
+以前用过的处理图片的macro,
+# +MACRO: img (eval "#+CAPTION: $1\n[[./$2]]{width=50%}") # for gitit
+#+MACRO: img (eval (format "\n#+CAPTION: %s\n#+ATTR_ODT: :scale 1.0\n[[./pic/%s]]\n" $1 $2))
+{{{img(添加不同网段IP,ldbg_set_pc_ip_1.png)}}}
+
+所有图片都放在一个pic目录
+
 *** Define org mode macro with line breaks
 https://stackoverflow.com/questions/22132603/define-org-mode-macro-with-line-breaks
 
@@ -153,6 +160,9 @@ https://stackoverflow.com/questions/22132603/define-org-mode-macro-with-line-bre
 
 #+MACRO: img (eval "#+CAPTION: $1\n[[./pic/$2]]")  # valid
 #+END_VERSE
+
+
+
 
 ** image size
 
@@ -214,7 +224,55 @@ and if you want to size this for both inline previews and html output:
   the same as the format used by Orgtbl radio tables, see *note
   Translator functions::, for a detailed description.
   
+
+* c4model-plantuml in org  
+  需要设备plantuml的 search path
+  - 通过 设置 header arguments, 参数为:java
+    
+    #+begin_src plantuml :file enterprise.svg :java -Dplantuml.include.path="/home/songzc/software/C4/"
+    #+end_src
+
+  - 设置 system-wide header arguments
+
+#+begin_example
+
+(setq org-babel-default-header-args:plantuml
+      (cons '(:java . "-Dplantuml.include.path=\"/home/songzc/software/C4/\"")
+                 (assq-delete-all :java org-babel-default-header-args:plantuml)))
+#+end_example
+
+
   
+** 注意使用LAYOUT_*宏时
+   现在版本的plantuml推荐使用函数方式，不使用宏定义。现在不去改这个库，而是使用时改成函数形式.
+
+
+
+#+begin_example
+
+'LAYOUT_TOP_DOWN
+'LAYOUT_LEFT_RIGHT
+LAYOUT_AS_SKETCH()
+'LAYOUT_WITH_LEGEND()
+
+#+end_example   
+
+
+
+
+
+plantuml网站原话
+#+begin_example
+
+You should not use !define and !definelong anymore. Use !function and variable definition instead. !define should be replaced by return function and !definelong should be replaced by void function.
+
+
+When calling a legacy !definelong macro with no arguments, you do have to use parenthesis. You have to use my_own_definelong() because my_own_definelong without parenthesis is not recognized by the new preprocessor.
+
+#+end_example
+
+
+
 * execute a emacs code in command line 
 
 #+BEGIN_EXAMPLE

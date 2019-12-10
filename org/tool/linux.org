@@ -69,6 +69,25 @@ Your power button should no be ignored.
 
 * Mojo-Webqq
 * virtualbox
+** Virtualbox same UUID as an existing virtual machine
+https://www.cscoder.cn/article/virtualbox-same-uuid-error.html
+
+#+begin_example
+
+VBoxManage internalcommands sethduuid   <filepath> [uuid]
+
+需要运行两次
+
+第一次返回一个uuid,
+VBoxManage internalcommands sethduuid   <filepath> 
+
+第二次指定UUID
+VBoxManage internalcommands sethduuid   <filepath> [uuid]
+
+#+end_example
+
+
+
 ** 设置远程vnc，密码
 
 #+BEGIN_EXAMPLE
@@ -138,12 +157,21 @@ cat /proc/acpi/wakeup
 * 设置鼠标速度
   https://wiki.archlinux.org/index.php/Libinput
 
-  https://wayland.freedesktop.org/libinput/doc/latest/pointer-acceleration.html
+http://rocksaying.tw/archives/48245554.html
+
+#+begin_verse
+xinput list
+xinput list-props device
+xinput set-prop device option-number setting
+xinput get-button-map 
+
+#+end_verse
 
 #+BEGIN_EXAMPLE
-
-
+xinput --set-prop $trackball_id 'libinput Accel Speed' 1 # 设置 mouse 速度 (-1.0 ~1.0)
 #+END_EXAMPLE
+
+
 
 
 
@@ -217,6 +245,7 @@ VBoxManage setextradata "macos" "VBoxInternal2/EfiGraphicsResolution" "1600x900"
 1.在iphone弹出信任窗口一定要信任;
 
 
+ idevicepair pair
 
 2.安装ifuse
 
@@ -244,6 +273,9 @@ ifuse /media/u
 
 
 #+END_VERSE
+
+fusermount -u /media/iPhone/ 
+
 
 http://www.cnblogs.com/dakewei/p/6849073.html
 https://www.dedoimedo.com/computers/linux-iphone-6.html
@@ -457,3 +489,42 @@ Comments?
 
 #+END_VERSE
 
+* create_ap
+
+https://wiki.archlinux.org/index.php/Software_access_point_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+https://github.com/oblique/create_ap
+** 解决create_ap ERROR: Failed to initialize lock
+
+#+begin_src bash  
+
+rm /tmp/create_ap.all.lock
+#+end_src
+
+
+Note: 如果你有一个基于RTL8192CU芯片组的网卡, 请从AUR中安装hostapd-rtl871xdrvAUR并在hostapd.conf 文件中将driver=nl80211 换成 driver=rtl871xdrv。
+
+* bluetooth-蓝牙 (air pods)
+
+** install bluez
+sudo pacman -S bluez bluez-utils blueman     
+
+sudo systemctl start bluetooth.service
+
+** configure file
+ https://raymondjdouglas.com/blog/2019/airpods-on-arch/
+
+sudo vi /etc/bluetooth/main.conf
+
+
+ControllerMode = bredr
+
+sudo systemctl restart bluetooth
+
+** install pulseaudio
+
+pacman -S pulseaudio-bluetooth pulseaudio-alsa
+pulseaudio --start
+
+* manage dotfile using "stow"
+
+  https://farseerfc.me/zhs/using-gnu-stow-to-manage-your-dotfiles.html

@@ -1,0 +1,33 @@
+* api 
+
+**  lua_gettop/lua_settop
+https://www.jianshu.com/p/c850e687cf33
+
+  - lua_gettop 获得栈内元素个数
+  - lua_settop 设置栈内元素个数
+
+
+#+begin_example
+
+    这两个api通常是成对出现的，一个是获得栈内元素个数，一个是设置栈内元素个数
+    在实际使用过程中这两个一般也是不分离的，比如：在调用lua函数前，需要先获得栈内元素个数保存在变量中，然后使用lua_pcall调用lua函数，最后再将栈内元素个数设置成原来的数量保证函数执行前后栈内元素不变（当然，一般情况下执行完lua函数后参数和函数都被弹出栈了，栈内元素数量应该是不变的）。
+
+#+end_example
+
+** getfield/setfield
+https://www.jianshu.com/p/4496710276cb
+
+* Lua和C++交互总结
+
+https://blog.csdn.net/shun_fzll/article/details/39120965
+
+  - 在lua中，lua堆栈就是一个struct，堆栈索引的方式可是是正数也可以是负数，区别是：正数索引1永远表示栈底，负数索引-1永远表示栈顶
+
+
+
+
+* 参考
+
+https://blog.csdn.net/fengbangyue/article/details/7342045
+
+

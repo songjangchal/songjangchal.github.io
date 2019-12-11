@@ -174,7 +174,6 @@ xinput --set-prop $trackball_id 'libinput Accel Speed' 1 # 设置 mouse 速度 (
 
 
 
-
 * rename    
 
 ** per-rename
@@ -205,7 +204,6 @@ rename           's/^/00/'          [0-9].jpg     # 这一步把1.jpg ..... 9.jp
 rename            's/^/0/'           [0-9][0-9].jpg   # 这一步把10.jpg ..... 99.jpg 变幻为010.jpg ..... 090.jpg
 
 #+END_EXAMPLE
-
 
 
 
@@ -308,27 +306,6 @@ The Ubuntu multiverse respositories also contain:
   - tesseract-data-chi_tra
   -  hunspell-<lang>
 
-* dwg 文件
- 
-https://askubuntu.com/questions/410090/preview-of-cad-files-in-format-dwg
-
-#+BEGIN_VERSE
-
-
-You can use QCAD, an open source AutoCAD replacement or the community fork LibreCAD made to work using the newer Qt4 framework. You can install LibreCAD from the Ubuntu Software Center. Using one of these two programs you import DWG files, edit the drawing and export it to PDF.
-
-LibreCAD screenshot
-
-QCad offered a command line tool to convert DWG to PDF directly - I'm guessing it's also available in LibreCAD.
-
-./dwg2pdf.sh drawing.dwg
-
-
-
-
-#+END_VERSE
-
-不能工作
 * iphone org-mode
 
 http://lists.gnu.org/r/emacs-orgmode/2009-03/msg00690.html

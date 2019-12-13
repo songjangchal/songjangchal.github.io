@@ -1,0 +1,633 @@
+#+TITLE: archlinux
+#+DATE: <2013-09-11 三>
+#+AUTHOR:
+#+EMAIL: songzc@localhost
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not LOGBOOK) date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil stat:t tags:t
+#+OPTIONS: tasks:nil tex:t timestamp:t toc:t todo:t |:t
+#+CREATOR: Emacs 24.3.1 (Org mode 8.0.7)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+* software list
+
+#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
+
+# please first install video driver and audio driver(alsa), display server(x server), libgl
+declare -A sw
+sw[wifi]="dialog wpa_supplicant"
+#sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
+sw[lower]="xorg-server xorg-apps xorg-xinit"
+sw[basic]="gvim sudo bash-completion unrar unzip ntfs-3g ntfsprogs sshfs alsa-utils acpi fuse-exfat exfat-utils"
+sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet remmina deluge iw"
+sw[pdf]="xournal zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional" --move to aur
+sw[gnome]="evince nautilus file-roller eog eog-plugins"
+sw[office]="xchm libreoffice "
+sw[media]="smplayer"
+sw[browser]="chromium flashplugin firefox"
+#sw[devel]="cscope rapidsvn meld pygtksourceview2"
+sw[devel]="cscope meld pygtksourceview2 prettier"
+sw[tool]="git mutt unison ibus ibus-pinyin ibus-table notify-osd keepassx liferea thunderbird"
+sw[emacs]="emacs"
+sw[haskell]="ghc cabal-install"
+sw[graphic]="inkscape mypaint gcolor2 slock"
+sw[lxde]="slim lxterminal pidgin pidgin-sipe guifications"
+sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray"
+sw[font]="ttf-dejavu wqy-microhei wqy-zenhei opendesktop-fonts"
+sw[java]="apache-ant"
+sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
+sw[vnc]="libvncserver tigervnc remmina"
+
+
+
+all_sw=""
+
+for v in ${sw[*]} 
+do
+ all_sw="$all_sw $v"
+done
+
+echo "all software: $all_sw"
+
+pacman -S $all_sw
+
+#+END_SRC
+
+* software list (2019/05/16)
+
+#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
+
+# please first install video driver and audio driver(alsa), display server(x server), libgl
+declare -A sw
+#sw[wifi]="dialog wpa_supplicant"
+#sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
+sw[lower]="xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
+sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock"
+sw[browser]="chromium flashplugin firefox"
+sw[pdf]=" zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional xournal" --move to aur
+sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet iw nftables"
+sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc scrot"
+sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
+sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
+sw[input_method]="ibus ibus-pinyin ibus-table"
+sw[devel]="cscope meld pygtksourceview2 prettier git make "
+sw[graphic]="inkscape mypaint gcolor2 gimp"
+
+sw[fs]="ntfs-3g ntfsprogs sshfs fuse-exfat exfat-utils"
+sw[download_tool]="deluge"
+sw[gnome]="evince nautilus file-roller eog eog-plugins"
+sw[office]="xchm libreoffice cups "
+sw[media]="smplayer"
+sw[tool]=" mutt unison  notify-osd keepassx liferea thunderbird"
+sw[font]="ttf-dejavu wqy-microhei wqy-zenhei opendesktop-fonts"
+
+#sw[lxde]="lxterminal pidgin pidgin-sipe guifications"
+#sw[haskell]="ghc cabal-install"
+#sw[java]="apache-ant"
+#sw[vnc]="libvncserver tigervnc remmina"
+
+
+
+sw[aur]="wps rapidsvn"
+
+sw[agioe]="davmail"
+sw[agioe_dev]="scons cutecom jlink-software-and-documentation"
+
+all_sw=""
+
+for v in ${sw[*]} 
+do
+ all_sw="$all_sw $v"
+done
+
+echo "all software: $all_sw"
+
+pacman -S $all_sw
+
+#+END_SRC
+
+* config
+
+#+BEGIN_SRC sh
+echo "KEYMAP=dvorak" > /etc/vconsole.conf
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
+systemctl enable slim
+systemctl enable NetworkManager
+#+END_SRC
+
+** change keyboard layout 
+
+/etc/X11/xorg.conf.d/10-evdev.conf
+
+#+BEGIN_EXAMPLE
+Section "InputClass"
+        Identifier "evdev keyboard catchall"
+        MatchIsKeyboard "on"
+        MatchDevicePath "/dev/input/event*"
+        Option "XkbLayout" "us"
+        Option "XkbVariant" "dvp"
+        Driver "evdev"
+EndSection
+#+END_EXAMPLE
+** 触摸板
+https://wiki.archlinux.org/index.php/Touchpad_Synaptics_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29#.E5.9C.A8.2Fdev.2Finput.2F.2A.E4.B8.AD.E6.B2.A1.E6.9C.89.E8.A7.A6.E6.91.B8.E6.9D.BF.E8.AE.BE.E5.A4.87.7D
+
+cat /proc/bus/input/devices
+
+ pacman -S xf86-input-synaptics
+** /etc/locale.gen
+en_GB.UTF-8 UTF-8  (英国英语)
+en_GB ISO-8859-1  
+en_HK.UTF-8 UTF-8  (香港英语)
+en_HK ISO-8859-1  
+
+en_US.UTF-8 UTF-8 (美国英语) 
+en_US ISO-8859-1  
+
+
+    去掉包括zh_cn的几行, 
+    
+   执行locale-gen
+
+** /etc/locale.conf
+#+BEGIN_SRC sh
+LANG=en_US.UTF-8
+LC_COLLATE=C
+#+END_SRC
+* haskell
+#+BEGIN_SRC sh
+sw_haskell="ghc cabal-install"
+
+pacman -S $sw_haskell
+cabal update
+cabal install pandoc
+
+#+END_SRC
+
+* android
+** lib32 
+ - lib32-libstdc++5
+ - lib32-elfutils
+ - mtpfs android-udev gvfs-mtp
+
+* jdownloader
+* If you happen to forget to run pacman-key --populate archlinux you might get some errors while importing keys.
+* wine
+  - zenity
+  - lib32-lcms2
+  - winetricks
+  - wine-mono
+  - wine_gecko
+
+  - 中文字体
+
+  - 声音
+    - lib32-alsa-lib
+    - lib32-alsa-plugins.
+  - lib32-mpg123
+  - lib32-libpulse
+  - theme
+    winecfg->Desktop integration->Item->windown background: color选择灰色
+ 
+
+    
+* archlinux 64位上运行32位程序 
+    http://blog.csdn.net/cnsword/article/details/7447670
+
+archlinux纯64位版是没有办法直接运行32位程序的。因为缺少最主要的glibc的32位版本的支持。
+
+要想使archlinux64支持32位程序，只需要将32位的源添加进来就可以。
+
+/etc/pacman.conf中增加
+
+[plain] view plaincopyprint?
+
+    [multilib]  
+    Include = /etc/pacman.d/mirrorlist  
+
+
+如果是chakra需要将repo的名称修改为lib32和lib32-test
+
+[plain] view plaincopyprint?
+
+    [lib32]  
+    Include = /etc/pacman.d/mirrorlist  
+
+
+
+这样通过pacman安装lib32-glibc库就能提供基本的32位支持了，如果需要32位桌面环境库，安装lib32-gtk或者lib-kde就可以了。看出规律来了吧，这些库的前缀都是lib32-。下一步就可以自由的使用了。
+
+* ibus 
+
+#+BEGIN_SRC 
+
+  cp zhengma.db /usr/share/ibus-table/tables/.
+  cp zhengma.svg /usr/share/ibus-table/icons/.
+
+#+END_SRC
+
+
+
+* 需要copy的
+  - ./.thunderbird 目录
+* archiso
+
+* davmail
+  从aur上下载安装
+启动可以用 systemd 用户级服务管理
+#+BEGIN_EXAMPLE
+$ systemctl --user start davmail@username.service
+$ systemctl --user enable davmail@username.service
+#+END_EXAMPLE
+
+新的用户级管理下，配置文件的位置发生变化，在/home/songzc/.config/davmail/songzc.properties
+而不是在 $HOME下，文件名也变了
+
+** systemd 用户级管理
+   https://wiki.archlinux.org/index.php/Systemd/User_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+
+** ERR DavMail configuration exception: Connect exception: javax.net.ssl.SSLHandshakeException User rejected certificate
+
+证书过期
+
+按照如下方法更新
+
+https://techienotes.blog/2017/12/30/how-to-update-davmail-gateway-configuration-with-new-ssl-certificate/
+
+First get the raw certificate:
+
+#+BEGIN_EXAMPLE
+
+echo Q |openssl s_client -connect mail.example.com:443
+
+#+END_EXAMPLE
+
+Copy the lines from —–BEGIN CERTIFICATE—– to —–END CERTIFICATE—– to a file, say cert.pem, and generate the SHA1 fingerprint using:
+
+#+BEGIN_EXAMPLE
+openssl x509 -in cert.pem -sha1 -noout -fingerprint
+#+END_EXAMPLE
+
+出来的是这种格式
+
+#+BEGIN_EXAMPLE
+44:17:BE:7D:C8:FA:6E:40:8B:C5:F0:96:55:97:AC:E1:5B:E7:37:A5
+#+END_EXAMPLE
+
+加上“\"
+最后写到配置文件里
+
+#+BEGIN_EXAMPLE
+davmail.server.certificate.hash=44\:17\:BE\:7D\:C8\:FA\:6E\:40\:8B\:C5\:F0\:96\:55\:97\:AC\:E1\:5B\:E7\:37\:A5
+#+END_EXAMPLE
+
+
+* install 
+- set route
+ route add delaut gw 192.168.56.1
+
+
+** partition
+ - MBR or GPT
+
+#+BEGIN_EXAMPLE
+Master Boot Record (MBR) 是存储设备最开始的 512 字节
+
+GUID Partition Table (GPT) 是 Unified Extensible Firmware Interface 标准定义的分区规范。使用 globally unique identifiers (GUIDs), 或 Linux 中的 UUID 定义分区和 分区类型. 设计上是为了替换 #Master Boot Record。 
+
+GPT方案中只有一种分区类型，主分区。磁盘和RAID卷中包含的分区数量没有限制。
+
+GUID Partition Table （GPT）是一种更灵活的分区方式。它正在逐步取代Master Boot Record （MBR）系统。GPT相对于诞生于MS-DOS时代的MBR而言，有许多优点。新版的fdisk（MBR）和gdisk（GPT）使得使用GPT或者MBR在可靠性和性能最大化上都非常容易。 
+
+#+END_EXAMPLE
+
+https://wiki.archlinux.org/index.php/Partitioning#GUID_Partition_Table
+
+ - GPT
+   
+   using parted tools 
+
+#+BEGIN_EXAMPLE
+parted /dev/sda
+
+rm 1
+
+mklable gpt
+
+mkpart ESP fat32 1M 513M
+
+
+#+END_EXAMPLE
+  
+fdisk只能用于MBR分区，gdisk,parted可以用于GPT分区。
+
+
+- mount 分区
+
+#+BEGIN_EXAMPLE
+ mount /dev/sdx  /mnt  # root (/)
+
+ mkdir -p /mnt/boot
+ mount /dev/sdx /mnt/boot # efi 分区
+
+ mkdir -p /mnt/home
+ mount /dev/sdx /mnt/home
+
+#+END_EXAMPLE
+
+- 安装 基础软件包
+
+#+BEGIN_SRC bash
+
+ pacstrap /mnt base
+
+#+END_SRC  
+- 生成fstab
+
+#+BEGIN_SRC 
+genfstab -U /mnt >> /mnt/etc/fstab
+#+END_SRC  
+
+
+- arch-chroot
+  
+- 安装 grub
+安装 软件包 grub 和 efibootmgr
+
+#+BEGIN_EXAMPLE
+
+  grub-install --target=x86_64-efi --efi-directory=esp_mount --bootloader-id=grub
+#+END_EXAMPLE
+
+挂载 ESP 分区，例如挂载到 /boot 或 /boot/efi。
+上述安装完成后 GRUB 的主目录将位于 /boot/grub/。 
+ 
+#+BEGIN_EXAMPLE
+# grub-mkconfig -o /boot/grub/grub.cfg
+
+#+END_EXAMPLE
+
+
+Filesystem      Size  Used Avail Use% Mounted on
+dev             3.9G     0  3.9G   0% /dev
+run             3.9G  1.1M  3.9G   1% /run
+/dev/sda2        28G   17G  9.7G  63% /
+tmpfs           3.9G  120M  3.8G   4% /dev/shm
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+tmpfs           3.9G   27M  3.9G   1% /tmp
+/dev/sda3        82G   44G   34G  57% /home
+/dev/sda1       511M   60M  452M  12% /boot
+/dev/sdb4       248G  219G   17G  93% /home/songzc/mnt_hitachi
+tmpfs           786M   44K  785M   1% /run/user/1000
+➜  ~ sudo fdisk -l
+[sudo] password for songzc: 
+Disk /dev/sda: 111.81 GiB, 120034123776 bytes, 234441648 sectors
+Disk model: Lenovo SSD SL700
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 14D31C1C-CC1A-4FCD-A8E1-AA2BBB028817
+
+Device        Start       End   Sectors  Size Type
+/dev/sda1      2048   1001471    999424  488M EFI System
+/dev/sda2   1001472  59570175  58568704   28G Linux filesystem
+/dev/sda3  59570176 234441614 174871439 83.4G Linux filesystem
+
+
+Disk /dev/sdb: 298.9 GiB, 320072933376 bytes, 625142448 sectors
+Disk model: HITACHI HTS72503
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 85B41246-59AD-49C6-9635-82BED946A2EF
+
+Device        Start       End   Sectors   Size Type
+/dev/sdb1        40   1048615   1048576   512M EFI System
+/dev/sdb2   1048616  32505895  31457280    15G Linux filesystem
+/dev/sdb3  32505896  95420455  62914560    30G Linux root (x86-64)
+/dev/sdb4  95420456 625142414 529721959 252.6G Linux home
+➜  ~ df -h 
+Filesystem      Size  Used Avail Use% Mounted on
+dev             3.9G     0  3.9G   0% /dev
+run             3.9G  1.1M  3.9G   1% /run
+/dev/sda2        28G   17G  9.7G  63% /
+tmpfs           3.9G  120M  3.8G   4% /dev/shm
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+tmpfs           3.9G   27M  3.9G   1% /tmp
+/dev/sda3        82G   44G   34G  57% /home
+/dev/sda1       511M   60M  452M  12% /boot
+/dev/sdb4       248G  219G   17G  93% /home/songzc/mnt_hitachi
+tmpfs           786M   44K  785M   1% /run/user/1000
+➜  ~ 耗
+
+
+* fcitx5
+
+** fcitx5-qt5-git
+** install kcm-fcitx5-git
+ 
+
+#+BEGIN_EXAMPLE
+
+  -> fcitx5-qt5-git
+  -> knewstuff
+  -> kcmutils
+ extra-cmake-modules
+#+END_EXAMPLE
+
+
+
+
+=> Making package: fcitx5-qt-git r135.9ac0796-2 (Fri 14 Jun 2019 05:57:26 PM CST)
+==> Checking runtime dependencies...
+==> Missing dependencies:
+  -> fcitx5-git
+==> Checking buildtime dependencies...
+==> Missing dependencies:
+  -> qt4
+  -> qt5-quickcontrol
+
+==> Making package: fcitx5-git r408.984f3f2-3 (Fri 14 Jun 2019 05:59:23 PM CST)
+==> Checking runtime dependencies...
+==> Missing dependencies:
+  -> xcb-imdkit-git
+==> Checking buildtime dependencies...
+==> ERROR: Could not resolve all dependencies
+* bluetootch
+
+ lspci -k -s 
+sudo  journalctl -b | grep Bluetooth
+
+* t530i 闪屏问题
+<2019-11-18 一>
+
+***  安装nvidia驱动
+
+ 一开始安装的是nvidia 驱动，总是加载不了
+
+用
+#+begin_example
+dmesg
+#+end_example
+
+显示
+#+begin_example
+
+[ 3803.310857] nvidia-nvlink: Nvlink Core is being initialized, major device number 236
+[ 3803.312144] NVRM: The NVIDIA NVS 5400M GPU installed in this system is
+               NVRM:  supported through the NVIDIA 390.xx Legacy drivers. Please
+               NVRM:  visit http://www.nvidia.com/object/unix.html for more
+               NVRM:  information.  The 435.21 NVIDIA driver will ignore
+               NVRM:  this GPU.  Continuing probe...
+[ 3803.312149] NVRM: No NVIDIA graphics adapter found!
+[ 3803.313421] nvidia-nvlink: Unregistered the Nvlink Core, major device number 236
+
+#+end_example
+
+改为安装nvidia-390xx
+
+安装后，startx , 提示 screen找不到， 在wiki上看到说是驱动问题并且官方也不打算解决
+
+*** 安装开源驱动 nouveau
+    安装后仍然闪屏， 发现同时加载了intel和nvidia的驱动，推测现在的BIOS中display显示模式为 NVIDIA optimus
+
+*** 在BIOS->config->display
+
+    1. integrated
+    2. discrete
+    3. NVIDIA optimus
+
+    设置成1，3会闪屏
+    设置2(只使用独立显卡)就不会，缺是耗电
+
+*** 用到的命令
+#+begin_example
+lsmod
+dmesg
+mkinitcpio
+modprode
+rmmod
+#+end_example
+* inkscape dark mode 模式
+
+
+** inkscape-dark-theme
+   - https://github.com/AbdullahRagb/inkscape-dark-theme
+
+
+copy theme file to /usr/share/themes/Default/gtk-2.0-key
+or /etc/gtk-2.0
+or replace theme files with gtk-2.0 file in the theme that you use
+
+原来的 /etc/gtk-2.0 里只有im-multipress.conf
+
+
+
+** https://bampress.bambamboo.xyz/archives/1140
+
+
+sudo vim /usr/share/applications/inkscape.desktop
+env GTK2_RC_FILES=/tmp/gtkrc inkscape
+* inkscape :All 21 Inkscape Tools and Uses Explained
+
+  - https://logosbynick.com/inkscape-tools-and-uses/
+
+* inkscape default template
+  
+  ~/.config/inkscape/default.svg
+  
+* 主题设定（theme)
+
+  安装以下包
+   - lxappearance-gtk3
+     图形设置软件
+   - materia-gtk-theme
+   - deepin-gtk-theme
+* bcm 
+
+dmsg | grep -ie  bluetooth
+
+
+
+#+begin_example
+
+[    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+[    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
+➜  /tmp dmesg | grep -ie bluetooth 
+[    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+[    5.058568] Bluetooth: Core ver 2.22
+[    5.058590] Bluetooth: HCI device and connection manager initialized
+[    5.058595] Bluetooth: HCI socket layer initialized
+[    5.058597] Bluetooth: L2CAP socket layer initialized
+[    5.058601] Bluetooth: SCO socket layer initialized
+[    5.222159] Bluetooth: hci0: BCM: chip id 63
+[    5.223161] Bluetooth: hci0: BCM: features 0x07
+[    5.239163] Bluetooth: hci0: Broadcom Bluetooth Device
+[    5.240153] Bluetooth: hci0: BCM20702A1 (001.002.014) build 1669
+[    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
+[    5.240493] Bluetooth: hci0: BCM: Patch brcm/BCM20702A1-0a5c-21e6.hcd not found
+[    8.587069] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[    8.587070] Bluetooth: BNEP filters: protocol multicast
+[    8.587074] Bluetooth: BNEP socket layer initialized
+
+#+end_example
+
+wget -c https://github.com/winterheart/broadcom-bt-firmware/raw/master/brcm/BCM20702A1-0a5c-21e6.hcd
+
+pacman -Ql linux-firmware | grep brcm 
+
+sudo cp BCM20702A1-0a5c-21e6.hcd /usr/lib/firmware/brcm/.
+* 截图软件
+  - scrot
+传到inkscape 编辑
+例子
+https://cn.bullforyou.com/stack/1573086756792995.html
+
+#+begin_example
+
+scrot 'Screenshot_%Y-%m-%d_%H-%M-%S.png' -szb -e 'inkscape $f'
+
+这里 'inkscape $f' 只能用单引号，不能用双引号。
+双引号会把$f再次替换
+#+end_example
+
+  - flameshot
+  - deepin-screenshot
+  - hotshots
+  
+* 录屏软件
+
+SimpleScreenRecorder
+* wacom
+
+多屏设置
+
+hen you need to know what is the ID of your tablet.
+
+#+begin_example
+$ xsetwacom --list devices
+#+end_example
+
+WALTOP International Corp. Slim Tablet stylus   id: 12  type: STYLUS
+
+In my case I want to map the tablet (ID: 12) to the screen on the right, which is VGA-0. I can do that with this command
+
+#+begin_example
+$ xsetwacom --set 12 MapToOutput "VGA-0"
+#+end_example
+
+
+Inkscape
+As in GIMP, to do the same simply got to Edit → Input Devices.... Now for each of your eraser, stylus, and cursor devices, set the mode to Screen, and remember to save. 
+* pacvis(类似pacgraph, pactree)
+https://farseerfc.me/zhs/pacvis.html
+
+
+

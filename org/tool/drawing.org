@@ -4,4 +4,25 @@
 * C4model-plantuml
   https://c4model.com/
 
+* 画图工具
 
+** plantuml
+** graphviz
+** diagrams
+   http://projects.haskell.org/diagrams/
+diagrams is a powerful, flexible, declarative domain-specific language for creating vector graphics, using the Haskell programming language. 
+
+** mermaid
+http://knsv.github.io/mermaid/#mermaid
+Generation of diagrams and flowcharts from text in a similar manner as markdown.
+
+** asty
+** gnu plot
+** r 
+
+
+* 画画软件
+  - gimp
+  - inkscape
+  - krita
+  - mypaint

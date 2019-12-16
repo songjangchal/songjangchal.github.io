@@ -19,9 +19,6 @@
 
 # please first install video driver and audio driver(alsa), display server(x server), libgl
 declare -A sw
-sw[wifi]="dialog wpa_supplicant"
-#sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
-sw[lower]="xorg-server xorg-apps xorg-xinit"
 sw[basic]="gvim sudo bash-completion unrar unzip ntfs-3g ntfsprogs sshfs alsa-utils acpi fuse-exfat exfat-utils"
 sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet remmina deluge iw"
 sw[pdf]="xournal zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional" --move to aur
@@ -65,32 +62,44 @@ pacman -S $all_sw
 declare -A sw
 #sw[wifi]="dialog wpa_supplicant"
 #sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
-sw[lower]="xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
-sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock"
+sw[lower]="xorg xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
+sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock xss-lock notify-osd"
+sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc "
 sw[browser]="chromium flashplugin firefox"
 sw[pdf]=" zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional xournal" --move to aur
-sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet iw nftables"
-sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc scrot"
-sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
-sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
-sw[input_method]="ibus ibus-pinyin ibus-table"
-sw[devel]="cscope meld pygtksourceview2 prettier git make "
-sw[graphic]="inkscape mypaint gcolor2 gimp"
+sw[net]="net-tools openssh wireshark-qt networkmanager network-manager-applet iw nftables"
 
+sw[nemo]="nemo nemo-fileroller nemo-image-converter nemo-preview nemo-python nemo-terminal"
+
+sw[input_method]="ibus ibus-pinyin ibus-table"
+
+sw[iphone]="ifuse"
+sw[bulethooth]="bluez bluez-utils blueman pulseaudio-bluetooth pulseaudio-alsa"
+
+sw[graphic]="scrot nomacs feh inkscape mypaint gcolor2 gimp"
+
+#sw[media]="smplayer"
+sw[media]="mpv"
+
+sw[theme]="lxappearance-gtk3 materia-gtk-theme"
+sw[font]="wqy-microhei wqy-zenhei opendesktop-fonts"
+
+
+sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
 sw[fs]="ntfs-3g ntfsprogs sshfs fuse-exfat exfat-utils"
 sw[download_tool]="deluge"
-sw[gnome]="evince nautilus file-roller eog eog-plugins"
-sw[office]="xchm libreoffice cups "
-sw[media]="smplayer"
-sw[tool]=" mutt unison  notify-osd keepassx liferea thunderbird"
-sw[font]="ttf-dejavu wqy-microhei wqy-zenhei opendesktop-fonts"
+# sw[gnome]="evince nautilus file-roller eog eog-plugins"
 
+sw[office]="xchm libreoffice cups "
+
+sw[tool]=" mutt unison keepassx liferea thunderbird"
+
+sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
+sw[devel]="cscope meld pygtksourceview2 prettier git make "
 #sw[lxde]="lxterminal pidgin pidgin-sipe guifications"
 #sw[haskell]="ghc cabal-install"
 #sw[java]="apache-ant"
 #sw[vnc]="libvncserver tigervnc remmina"
-
-
 
 sw[aur]="wps rapidsvn"
 

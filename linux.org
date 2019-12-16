@@ -2619,22 +2619,6 @@ libreoffice --invisible --convert-to docx test.odt
 
 #+END_SRC
 
-* 画图工具
-
-** plantuml
-** graphviz
-** diagrams
-   http://projects.haskell.org/diagrams/
-diagrams is a powerful, flexible, declarative domain-specific language for creating vector graphics, using the Haskell programming language. 
-
-** mermaid
-http://knsv.github.io/mermaid/#mermaid
-Generation of diagrams and flowcharts from text in a similar manner as markdown.
-
-** asty
-** gnu plot
-** r 
-
 * lua vs js
 
 ** should-i-use-lua
@@ -3398,11 +3382,6 @@ chmod 777  /run/lighttpd/
 export LD_LIBRARY_PATH=/home/songzc/codbase/rail_robot/dist/i386:$LD_LIBRARY_PATH 
 lighttpd -D -f /etc/lighttpd/lighttpd.conf
 #+END_SRC
-* 画画软件
-  - gimp
-  - inkscape
-  - krita
-  - mypaint
 
 * postgresal使用错误解决
 

@@ -1,6 +1,4 @@
 #+title: window manager and relative things
-
-
 * conky
   - Task manager: https://en.wikipedia.org/wiki/Task_manager
   - System monitor: https://en.wikipedia.org/wiki/System_monitor

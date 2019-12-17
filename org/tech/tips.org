@@ -142,6 +142,7 @@ https://wenku.baidu.com/view/61bb06b465ce0508763213c0.html
 
 #+END_EXAMPLE
 
+** build system
 
 * 代替__FILE__宏只显示文件名
   [[https://stackoverflow.com/questions/8487986/file-macro-shows-full-path][参考]]
@@ -818,6 +819,11 @@ not well-formed (invalid token)
     libpcap最快
 
 
+*** cgi/fcgi
+    - cgicc
+    - fastcgi++
+    - kcgi
+    - qdecoder
 ** c++ reference
  https://en.wikipedia.org/wiki/Reference_(C%2B%2B)
 
@@ -876,3 +882,382 @@ not well-formed (invalid token)
  UR"(This is a "raw UTF-32" string.)"
 
  #+END_EXAMPLE
+
+** stl 删除操作
+   由于stl(map, set)内部的存储结构不是线性的,　所以删除时不能用++it这种操作
+  
+      for(it = enter_faults_.begin(); it != enter_faults_.end(); ++it){
+
+              enter_faults_.erase(it);
+                
+         }
+
+ 这种操作因为删除后的内部结构重整,　++it已经不是原来的了,　会crash
+ 
+  list的操作erase会返回下一个单元的iterator,　但是在for要按照下面的写法
+       for(it = enter_faults_.begin(); it != enter_faults_.end();){
+             if(it->id.ToInt() == id.ToInt() && it->sub_type == sub_type){
+                 it = enter_faults_.erase(it);
+             }else{
+                ++it; 
+             }
+         }
+        
+ 把++操作移出来,　因为如果删除的是最后一个单元时,　再执行++就会crash
+
+   还是最好写成while 形式
+
+ #+BEGIN_SRC cpp
+     it = enter_faults_.begin();
+     while(it != enter_faults_.end()){
+             if(it->id.ToInt() == id.ToInt() && it->sub_type == sub_type){
+                 enter_faults_.erase(it);
+                it = enter_faults_.begin();               
+             }
+    }
+  
+ #+END_SRC  
+** c++ ORM
+*** 
+  http://www.codesynthesis.com/products/odb/
+*** 
+  http://quince-lib.com/index.html
+
+* linux 
+** proc/net/udp
+
+ Holds a dump of the UDP socket table. Much of the information is not of use apart from debugging. The "sl" value is the kernel hash slot for the socket, the "local_address" is the local address and port number pair. The "rem_address" is the remote address and port number pair (if connected). "St" is the internal status of the socket. The "tx_queue" and "rx_queue" are the outgoing and incoming data queue in terms of kernel memory usage. The "tr", "tm->when", and "rexmits" fields are not used by UDP. The "uid" field holds the effective UID of the creator of the socket.
+
+ Also see http://stackoverflow.com/a/18322579/449347
+
+ /proc/net/snmp
+
+ This file holds the ASCII data needed for the IP, ICMP, TCP, and UDP management information bases for an SNMP agent.
+
+ From http://linux.die.net/man/5/proc
+
+
+* json MIME
+*** json MIME
+   - Why you shouldn't use text/html for JSON
+   http://jibbering.com/blog/?p=514
+
+#+BEGIN_EXAMPLE
+
+Don't serve JSON as text/html
+Another day, another XSS flaw, this one in Google again, but this is a little more interesting than the normal ones, what this one shows is how JSON results add an extra vector to attack that might be missed by your QA team. The problem here was that the JSON was returned with a mime-type of text/html, a browser will render that as if it was an HTML page, even if it's really just a javascript snippet. The easiest way to protect against these is to ensure that all javascript recieved by the XMLHTTPRequest object is returned with a suitable mime-type - application/json That will mean even when you make a mistake and write un-encoded untrusted data to the document, it won't allow people to attack your site. The google exploit was reported here, it's at the time of writing unpatched, unfortunately that was down to the discoverer not giving google any time to fix, whilst they have had their problems before, recently they have patched quickly, so this was not very fair, or wise. Google also appear to be taking testing their own services for security flaws more seriously, they recently had a presentation to the QA team that you can watch on Google Video. As I've said before, the everything on a single domain causes problems, it means any exploit anywhere on the domain, allows you to exploit any service provided for the domain. This exploit is also present in https:// google, so to re-enforce the problem XSS can present to a user, and why XSS is not simply about cookie stealing. Here's a simple demonstration of using the exploit to steal username and password from google adsense. The exploit is simply used to create an IFRAME that fills the document and points it to a google adsense login, when the user logs in, the username and password are alerted - also after logging in, then the "today's earnings" are alerted. Of course a real attacker would not alert these fields, but would sent them off to a site to be collected later. Are google adsense passwords useful? Would you notice if the address or account to get the cash changed until you'd not got the cheque? The script code is simple, you don't need to be clever, and phishers generally aren't stupid, it takes brains to launder money.
+
+    document.body.innerHTML="<div><iframe src='https://www.google.com/adsense/report/overview'"+
+    " onload='go()' style='position:absolute;top:0;left:0;height:100%;width:100%;'></div>";
+
+    function go() {
+      try {
+      var win=window.frames[0];
+      win.document.body.style.overflow="hidden";
+      win.document.body.style.border="0px solid white";
+      var doc=win.frames[0].document.forms[0];
+      doc.onsubmit=function() {
+       alert("Your adsense username and password are:\n"+
+       doc["Email"].value+'\nand\n'+doc["Passwd"].value);
+       x=window.open(location.href);
+      }
+     } catch (e) {
+      try {
+       var win=window.frames[0];
+       var doc=win.document.body;
+       var x="Today's Earnings:"+doc.getElementsByTagName('h1')[0];
+       alert(x.getElementsByTagName('span')[0].innerHTML.replace(" ",""));
+      } catch (e) {}
+     }
+    }
+
+#+END_EXAMPLE
+
+*** JSON 的 MIME 类型 
+   http://blog.csdn.net/lilin_emcc/article/details/26670099
+
+RFC 4627 "The application/json Media Type for JavaScript Object Notation (JSON)" 于2006年7月将 JSON 注册为一个 MIME 类型：application/json 。
+
+参见：
+
+    ECMA-404 The JSON Data Interchange Format
+    RFC 4627 - The application/json Media Type for JavaScript Object Notation (JSON)
+    JSON: http://json.org/json-zh.html
+    MIME: http://www.iana.org/assignments/media-types/media-types.xhtml
+    application/json: http://www.iana.org/assignments/media-types/application/json
+    在线 JSON 校验格式化工具
+    
+
+* code style 
+
+** java 
+http://geosoft.no/development/javastyle.html
+
+*** 
+void setTopic(Topic topic) // NOT: void setTopic(Topic value) // NOT: void setTopic(Topic aTopic) // NOT: void setTopic(Topic t) void connect(Database database) // NOT: void connect(Database db) // NOT: void connect(Database oracleDB)
+
+*** 
+ 12. The name of the object is implicit, and should be avoided in a method name.
+line.getLength();   // NOT: line.getLineLength();
+*** 
+Note that the casing of the original words is almost entirely disregarded. Examples:
+Prose form 	Correct 	Incorrect
+"XML HTTP request" 	XmlHttpRequest 	XMLHTTPRequest
+"new customer ID" 	newCustomerId 	newCustomerID
+"inner stopwatch" 	innerStopwatch 	innerStopWatch
+"supports IPv6 on iOS?" 	supportsIpv6OnIos 	supportsIPv6OnIOS
+"YouTube importer" 	YouTubeImporter
+YoutubeImporter* 	
+
+
+* use case
+
+
+  1) 使用 use case 十大误区
+  1) 系统的boundary 没有定义或经常改变；
+  1) 从系统观点而不是actor观点来定义Use Case；
+  1) Actor的名称不一致；
+  1) Use Case 定义过多；
+  1) Use Case 和actor之间的关系象蜘蛛网一样错综复杂；
+  1) Use Case的说明太长；
+  1) Use Case的说明不清楚；
+  1) Use Case没有正确的描述功能需求；
+  1) 用户无法理解Use Case；
+  1) Use Case 无法正常结束
+
+* build tool
+ - cmake
+ - ninja build
+ - scons
+ - gmake
+* 代码检查,分析,
+
+vera++
+
+** kitware
+
+
+Software Testing for Everyone
+
+CDash is an open source, web-based software testing server. CDash aggregates, analyzes and displays the results of software testing processes submitted from clients located around the world. Developers depend on CDash to convey the state of a software system, and to continually improve its quality. CDash is a part of a larger software process that integrates Kitware’s CMake, CTest, and CPack tools, as well as other external packages used to design, manage and maintain large-scale software systems.
+Kitware’s Practical Software Process
+
+Kitware’s Practical Software Process has grown organically over more than a decade of developing large-scale, scientific software systems such as VTK and ITK. It is a low-overhead, streamlined process that results in high-quality software systems. Rooted in the concepts of extreme programming and test-driven development, the PSP has benefited from the contributions of many dozens of individuals scattered around the globe. Besides the GE, Kitware, VTK and ITK communities and sponsors like NA-MIC and Sandia National Labs, many individuals like Alexander Neundorf (assisted with the CMake/KDE port) and Andrew Maclean (systems evaluator and tester) at the University of Sydney have and continue to contribute to the development of the PSP.
+
+In recent years the PSP has grown to consist of several tools developed by Kitware and its partners, as well as external tools that have been adopted into the software process. These tools include:
+
+    CMake, for cross-platform development
+    CDash, the testing dashboard server
+    CTest, the testing client
+    CPack, the cross-platform packaging tool
+    KWStyle, the configurable coding style evaluation tool
+    Doxygen, for documentation generation
+    Mantis, a bug tracking system
+    dynamic memory analysis tools including ValGrind and Purify
+    and code coverage tools such as gcov and BullsEye.
+
+
+
+** 静态检查,分析
+*** infer
+*** cppcheck
+  - compile
+
+  make install SRCDIR=build CFGDIR=/usr/share/cppcheck/ HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function"
+
+
+*** cpplint.py
+    目前只能在python2下执行
+
+     python2 ./cpplint.py  --verbose=0 --filter=-whitespace/parens,-whitespace/braces src/basic_lib/*
+** code beautifier
+   - astyle http://astyle.sourceforge.net/
+   - clang-format
+   - Uncrustify
+
+* test tool && lib
+** quickcheck(haskell) , rapidcheck(c++)
+** fff (Fake Function Framework)
+
+fff is a micro-framework for creating fake C functions for tests. Because life is too short to spend time hand-writing fake functions for testing.
+https://github.com/meekrosoft/fff
+
+**  C/C++单元测试框架的选择
+
+http://blog.csdn.net/neilxp/article/details/4397275
+
+
+
+Quote from Bas's mail:
+
+
+CppUTest is not "my framework" Its an framework that is a 4th generation from CppUnit. Michael Feathers started CppUnit long ago. But then, the framework became too complex as it added too much features and used things like templates, which makes code quickly complex. So he abandoned and wrote CppUnitLite. That got improved in ObjectMentor to a tool called CppTest Tools (which included FIT for C++). The unit test part were extracted by me and James Grenning and  renamed to CppUTest. Thus, its a rather old framework and not  "developed by me"
+
+Similar frameworks are googletest, which came a lot later than CppUTest, which is pretty good but it has some serious sucky features (like the braindead << way of working). CxxTest is quite popular, but it requires a perl script to generate your test runner, which kinda sucks. CppUnit is sucky and is even abandoned by the original author (as mentioned) and CUnit sucks even more as it requires you to put manual calls.
+
+* lua vs js
+
+** should-i-use-lua
+http://stackoverflow.com/questions/18507447/should-i-use-lua
+
+https://debian-administration.org/article/264/Embedding_a_scripting_language_inside_your_C/C_code
+http://lua-users.org/wiki/BindingCodeToLua
+
+https://developers.google.com/v8/embed
+https://github.com/v8/v8/wiki/Embedder's%20Guide
+
+http://webserver2.tecgraf.puc-rio.br/~celes/tolua/
+
+
+https://www.lua.org/wshop16/
+
+http://blog.carlesmateo.com/2014/10/13/performance-of-several-languages/
+
+
+#+BEGIN_EXAMPLE
+
+I'm assuming you're writing a standalone application in C or C++, and you're looking for a language to enable people to extend that application by embedding another language. That's pretty much Lua's territory.
+
+Lua's strong point is that it's very easy to embed in your (C) application. It compiles quickly, it's tiny, licensing is liberal and using C functions from Lua is relatively easy. Standard Lua has enough performance for most things you'd use a language like this for; if you need more raw speed you could look into LuaJIT, the JIT-compiler for Lua.
+
+As for your questions:
+
+    LuaJIT will probably be pretty much as fast as you can get for a dynamic language. Lua is used in games (Sim City, Far Cry, World of Warcraft), where performance is very important.
+    If by 'resources' you mean documentation: sure. Lua is a very simple language, much simpler than JavaScript; the manual should help you get started with the language itself, the wiki is tasty for tips about the embedding process. This article has an example you can copy/paste.
+    Lua pretty much runs everywhere a C program will run. It doesn't even need an operating system, and it doesn't depend on anything at runtime if you bundle it correctly.
+
+Embedding a full JavaScript environment in your application, and interfacing your application to the JS environment, can be a lot of work (even though Google's V8 engine has some functionality to help you; see here).
+
+#+END_EXAMPLE
+
+* coredump file 
+    当系统中的一些程序在遇到一些错误以及crash时，系统会自动产生core file记录crash时刻系统信息包括内存和寄存器信息，用以程序员日后debug时可以使用。这些错误包括断错误，非法指令，总线错误和用户自己生成的退出信号等等。一般的，core file会在当前文件夹中存放。
+         core file有时可能在你发生错误时，并没有出现在你的当前文件夹中，发生这种情况的原因有两个，一个是当前终端被设置为不能弹出core file；另一种则是core file被制定了路径。
+         对于前者，我们可以使用ulimit这条命令对core file文件的大小进行设定。一般默认情况下，core file的大小被设置为了0，这样系统就不dump出core file了。这时用如下命令进行设置：
+ulimit -c unlimited
+这样便把core file的大小设置为了无限大，同时也可以使用数字来替代unlimited，对core file的上限值做更精确的设定。
+         除了可以设置core file的大小之外，还可以对core file的名称进行一些规定。这种设置是对/proc/sys/kernel/core_pattern和/proc/sys/kernel/core_uses_pid这两个文件进行修改。改动这两个文件的方法是：
+echo <pattern> > /proc/sys/kernel/core_pattern
+echo <"0"/"1"> > /proc/sys/kernel/core_uses_pid
+并且注意，只有超级用户可以修改这两个文件。
+         core_pattern接受的是core file名称的pattern，它包含任何字符串，并且用％作为转移符号生成一些标识符，为core file名称加入特殊含义。已定义的标识符有如下这些：
+%%: 相当于%
+%p: 相当于<pid>
+%u: 相当于<uid>
+%g: 相当于<gid>
+%s: 相当于导致dump的信号的数字
+%t: 相当于dump的时间
+%h: 相当于hostname
+%e: 相当于执行文件的名称
+除了这些标识符之外，还规定：
+1.末尾的单个％可以直接去除。
+2.%加上除上述之外的任何字符，％和该字符都被去除。
+3.所有其他字符都作为一般字符加入名称中。
+4.core file的名称最大值为64字节（包括\0）。
+5.core_pattern中的默认pattern为core。
+6.为了保持兼容性，通过设置core_uses_pid，可以在core file名称的末尾加上％p。
+7.pattern中可以包含路径信息。 
+
+* 网络测试发包
+** packet crafting
+*** software
+    - ostinato
+    - scapy
+    - tcpreplay
+    - yersinia
+    - Mausezahn (dead) ==> netsniff-ng toolkit
+
+
+
+
+
+
+ https://en.wikipedia.org/wiki/Packet_crafting
+
+ Packet crafting is a technique that allows network administrators to probe firewall rule-sets and find entry points into a targeted system or network. This is done by manually generating packets to test network devices and behaviour, instead of using existing network traffic.[1] Testing may target the firewall, IDS, TCP/IP stack, router or any other component of the network.[1][2] Packets are usually created by using a packet generator or packet analyzer which allows for specific options and flags to be set on the created packets. The act of packet crafting can be broken into four stages: Packet Assembly, Packet Editing, Packet Play and Packet Decoding.[1][2] Tools exist for each of the stages - some tools are focussed only on one stage while others such as Ostinato try to encompass all stages.
+
+ Contents
+
+     1 Packet Assembly
+     2 Packet Editing
+     3 Packet Play
+     4 Packet Decoding
+     5 See also
+     6 References
+     7 External links
+
+ Packet Assembly
+
+ Packet Assembly is the creation of the packets to be sent. Some popular programs used for packet assembly are Hping, Nemesis, Ostinato, Cat Karat packet builder, Libcrafter, libtins, Scapy, Wirefloss and Yersinia.[1][2][3] Packets may be of any protocol and are designed to test specific rules or situations. For example, a TCP packet may be created with a set of erroneous flags to ensure that the target machine sends a RESET command or that the firewall blocks any response.[1][2]
+ Packet Editing
+
+ Packet Editing is the modification of created or captured packets. This involves modifying packets in manners which are difficult or impossible to do in the Packet Assembly stage, such as modifying the payload of a packet.[2] Programs such as Ostinato, Netdude allow a user to modify recorded packets' fields, checksums and payloads quite easily.[1] These modified packets can be saved in packet streams which may be stored in pcap files to be replayed later.
+ Packet Play
+
+ Packet Play or Packet Replay is the act of sending a pre-generated or captured series of packets. Packets may come from Packet Assembly and Editing or from captured network attacks. This allows for testing of a given usage or attack scenario for the targeted network. Tcpreplay is the most common program for this task since it is capable of taking a stored packet stream in the pcap format and sending those packets at the original rate or a user-defined rate. Ostinato added support for pcap files in version 0.4.[4] Some packet analyzers are also capable of packet replay.
+ Packet Decoding
+
+ Packet Decoding is the capture and analysis of the network traffic generated during Packet Play. In order to determine the targeted network's response to the scenario created by Packet Play, the response must be captured by a packet analyzer and decoded according to the appropriate specifications. Depending on the packets sent, a desired response may be no packets were returned or that a connection was successfully established, among others.
+ See also
+
+     Comparison of packet analyzers
+     Comparison of packet crafter libraries
+     Packetsquare
+     Replay attack
+     Packet Sender
+
+ References
+ Zereneh, William. "Packet Crafting" (PDF). Retrieved 2010-08-01.
+ Poor, Mike. "Packet Craft for Defense-in-Depth" (PDF). InGuardians. Retrieved 2010-08-01.
+ "Top 4 Packet Crafting Tools". SecTools.org. Retrieved 2010-08-01.
+
+     "Ostinato ChangeLog". Retrieved 2011-04-30.
+
+ External links
+
+     Packet Crafting for Firewall & IDS Audits (Part 1 of 2) by Don Parker [1]
+     Wikiformat article detailing Packet crafting
+     Bit-Twist - Libpcap-based Ethernet packet generator [2]
+     Packet Sender - open source packet generator focused on ease-of-use
+
+
+ #+BEGIN_EXAMPLE
+ '''Packet crafting''' is a technique that allows [[network administrator]]s to probe [[Firewall (computing)|firewall]] rule-sets and find entry points into a targeted system or network.  This is done by manually generating [[Packet (information technology)|packets]] to test network devices and behaviour, instead of using existing network traffic.<ref name=zereneh>{{cite web | last = Zereneh | first= William | url = http://www.scs.ryerson.ca/~zereneh/linux/PacketCrafting.pdf | title= Packet Crafting | accessdate = 2010-08-01 }}</ref> Testing may target the firewall, [[Intrusion detection system|IDS]], [[TCP/IP stack]], [[Router (computing)|router]] or any other component of the network.<ref name=zereneh /><ref name=poor>{{cite web | last = Poor | first = Mike | url = http://www.inguardians.com/research/docs/packetfoo.pdf | title = Packet Craft for Defense-in-Depth | publisher = InGuardians | accessdate = 2010-08-01 }}</ref> Packets are usually created by using a [[packet generator]] or [[packet analyzer]] which allows for specific options and [[Flag (computing)|flags]] to be set on the created packets. The act of packet crafting can be broken into four stages: Packet Assembly, Packet Editing, Packet Play and Packet Decoding.<ref name=zereneh /><ref name=poor /> Tools exist for each of the stages - some tools are focussed only on one stage while others such as [http://ostinato.org/ Ostinato] try to encompass all stages.
+
+ ==Packet Assembly==
+ Packet Assembly is the creation of the packets to be sent. Some popular programs used for packet assembly are [[Hping]], [[Nemesis (software)|Nemesis]], [http://ostinato.org/ Ostinato], [http://packetbuilder.net/ Cat Karat packet builder], [http://code.google.com/p/libcrafter/ Libcrafter], [http://libtins.sourceforge.net libtins], [[Scapy]], [http://wirefloss.com Wirefloss] and [[Yersinia (computing)|Yersinia]].<ref name=zereneh /><ref name=poor /><ref name=sectools>{{cite web | url = http://sectools.org/packet-crafters.html | title= Top 4 Packet Crafting Tools | publisher =  SecTools.org | accessdate = 2010-08-01}}</ref> Packets may be of any [[Communications protocol|protocol]] and are designed to test specific rules or situations. For example, a [[TCP packet]] may be created with a set of erroneous flags to ensure that the target machine sends a RESET command or that the firewall blocks any response.<ref name=zereneh /><ref name=poor />
+
+ ==Packet Editing==
+ Packet Editing is the modification of created or captured packets. This involves modifying packets in manners which are difficult or impossible to do in the Packet Assembly stage, such as modifying the payload of a packet.<ref name=poor /> Programs such as [http://ostinato.org/ Ostinato], [[Netdude]] allow a user to modify recorded packets' fields, checksums and payloads quite easily.<ref name=zereneh /> These modified packets can be saved in packet streams which may be stored in [[pcap]] files to be replayed later.
+
+ ==Packet Play==
+ Packet Play or Packet Replay is the act of sending a pre-generated or captured series of packets. Packets may come from Packet Assembly and Editing or from captured network attacks. This allows for testing of a given usage or attack scenario for the targeted network. [[Tcpreplay]] is the most common program for this task since it is capable of taking a stored packet stream in the [[pcap]] format and sending those packets at the original rate or a user-defined rate. [http://ostinato.org/ Ostinato] added support for [[pcap]] files in version 0.4.<ref name=ostcl>{{cite web | url = http://ostinato.org/wiki/ChangeLog | title= Ostinato ChangeLog | accessdate = 2011-04-30 }}</ref> Some packet analyzers are also capable of packet replay.
+
+ ==Packet Decoding==
+ Packet Decoding is the [[Packet capture|capture]] and analysis of the network traffic generated during Packet Play. In order to determine the targeted network's response to the scenario created by Packet Play, the response must be captured by a [[packet analyzer]] and decoded according to the appropriate specifications. Depending on the packets sent, a desired response may be no packets were returned or that a connection was successfully established, among others.
+
+ == See also ==
+ *[[Comparison of packet analyzers]]
+ *[[Comparison of packet crafter libraries]]
+ *[[Packetsquare]]
+ *[[Replay attack]]
+ *[[Packet Sender]]
+
+ ==References==
+ <references />
+
+ ==External links==
+ *Packet Crafting for Firewall & IDS Audits (Part 1 of 2) by Don Parker [http://www.securityfocus.com/infocus/1787]
+ *Wikiformat article detailing [http://www.wikistc.org/wiki/Packet_crafting Packet crafting]
+ *Bit-Twist - Libpcap-based Ethernet packet generator [http://bittwist.sourceforge.net/]
+ *[https://packetsender.com/ Packet Sender] - open source packet generator focused on ease-of-use
+
+ {{DEFAULTSORT:Packet Crafting}}
+ [[Category:Network analyzers]]
+
+ [[ru:Конструктор пакетов]]
+ #+END_EXAMPLE
+
+** packet injection
+ https://en.wikipedia.org/wiki/Packet_injection
+

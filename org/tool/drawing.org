@@ -26,3 +26,23 @@ Generation of diagrams and flowcharts from text in a similar manner as markdown.
   - inkscape
   - krita
   - mypaint
+
+* 2D动画软件
+    Pencil2D
+
+简单轻便，专注逐帧动画，包含了动画制作的基本功能，允许用户创建手绘场景，可以在矢量与栅格之间无缝切换，跨平台支持 Mac Linux 和 Windows，社区也在不断增长。
+
+    Synfig
+
+具有专业功能的 2D 动画软件，跨平台支持 Mac Linux 和 Windows，具有强大的社区以及大量教程与视频。与 Pencil2D 类似，但学习曲线要略微陡峭，因为它包含一些更为高级的功能，譬如骨骼动画以及声音支持。
+
+    OpenToonz
+
+Toonz 的专业性毋庸置疑，因为曾被用于制作《幽灵公主》等，其特点是将传统绘画与 2D 动画结合起来。2016 年，Toonz 宣布开源，通过出售安装服务，培训和支持来获得利润。
+
+    Gimp
+
+众所周知，Gimp 以开源 Photoshop 著称，而它其中含有的时间线功能也让不少人拿它当做动画工具使用。（不过我是不太能用惯就是了…）
+
+    Blender
+Blender 2.8 中推出了 Grease Pencil 2D 动画功能，这也意味着它正是具备了二维动画创作的强大功能。

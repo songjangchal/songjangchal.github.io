@@ -558,3 +558,12 @@ https://github.com/sprig/org-capture-extension
 ** emacs china
 http://book.emacs-china.org/
 
+* google translate 
+
+
+google-translate-core.el 77:  "http://translate.google.com/translate_a/single")
+google-translate-core.el 80:  "http://translate.google.com/translate_tts")
+google-translate-tk.el 48:  "http://translate.google.com/")
+
+
+https://translate.google.cn

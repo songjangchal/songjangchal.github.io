@@ -108,7 +108,6 @@ sudo service acpid restart
 
 Your power button should no be ignored.
 
-* Mojo-Webqq
 * virtualbox
 ** virtual machine
  https://en.wikipedia.org/wiki/Virtual_machine
@@ -237,7 +236,6 @@ xinput --set-prop $trackball_id 'libinput Accel Speed' 1 # 设置 mouse 速度 (
 #+END_EXAMPLE
 
 
-
 * 一行命令解决linux显示txt乱码
 一行命令解决linux显示windows中文txt乱码的问题
 前提是你的linux可以正常显示中文，只是打开windows txt文件会有乱码。
@@ -251,7 +249,6 @@ xinput --set-prop $trackball_id 'libinput Accel Speed' 1 # 设置 mouse 速度 (
 #+BEGIN_EXAMPLE
   export TERM="xterm"
 #+END_EXAMPLE
-
 
 
 
@@ -269,7 +266,6 @@ xinput --set-prop $trackball_id 'libinput Accel Speed' 1 # 设置 mouse 速度 (
  
 其实只要注释掉）Defaults    requiretty 那个就可以了。表示在执行的时候不打开终端。但是，有的shell必须要有终端才可以执行。这样显然是不行的。后来，又找到一片文章才搞定。下面为抄录的，仅为记录以后使用。
  
-
 
 * rename    
 
@@ -301,7 +297,6 @@ rename           's/^/00/'          [0-9].jpg     # 这一步把1.jpg ..... 9.jp
 rename            's/^/0/'           [0-9][0-9].jpg   # 这一步把10.jpg ..... 99.jpg 变幻为010.jpg ..... 090.jpg
 
 #+END_EXAMPLE
-
 
 
 * 安装macos on virtualbox
@@ -810,4 +805,7 @@ echo"Backup complete!!!" >> $LOGFILE 2>&1
 
 
 * rrdtool
-   Data logging and graphing application
+  Data logging and graphing application
+
+
+  

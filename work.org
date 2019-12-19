@@ -1,4 +1,3 @@
-
 * centos 7 安装过程
 ** root 密码丢失
    grub 启动项目 的ro 改成
@@ -2312,3 +2311,9 @@ inline namespace abi2 __attribute ((abi_tag)) {
 2016-08-02 12:07:25.342093:[DEBUG]:/home/songzc/codbase/new_330/acum/hosts/i386/include/acum_config.h(63): sql[0]
 2016-08-02 12:07:25.342100:[DEBUG]:/home/songzc/codbase/new_330/acum/hosts/i386/include/acum_config.h(66): acu size [0]
 Segmentation fault (core dumped)
+* android
+** lib32 
+ - lib32-libstdc++5
+ - lib32-elfutils
+ - mtpfs android-udev gvfs-mtp
+

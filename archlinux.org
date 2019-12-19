@@ -13,287 +13,66 @@
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 
-* software list
+* backup_list
+** list
+  - gitit 服务器
+  - QQ 语音 文件
+  - szc_life/github
+  - firefox 配置，插件
+    - keysnail (.keysnail.js)
+  - 重要email
+   - ./.thunderbird 目录
+  - 配置文件
+    - vim
+    - emacs
+    - xmonad
+    - xinitrc(xorg)
+    - zathura (pdf)
 
-#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
+  - tmp目录
 
-# please first install video driver and audio driver(alsa), display server(x server), libgl
-declare -A sw
-sw[basic]="gvim sudo bash-completion unrar unzip ntfs-3g ntfsprogs sshfs alsa-utils acpi fuse-exfat exfat-utils"
-sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet remmina deluge iw"
-sw[pdf]="xournal zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional" --move to aur
-sw[gnome]="evince nautilus file-roller eog eog-plugins"
-sw[office]="xchm libreoffice "
-sw[media]="smplayer"
-sw[browser]="chromium flashplugin firefox"
-#sw[devel]="cscope rapidsvn meld pygtksourceview2"
-sw[devel]="cscope meld pygtksourceview2 prettier"
-sw[tool]="git mutt unison ibus ibus-pinyin ibus-table notify-osd keepassx liferea thunderbird"
-sw[emacs]="emacs"
-sw[haskell]="ghc cabal-install"
-sw[graphic]="inkscape mypaint gcolor2 slock"
-sw[lxde]="slim lxterminal pidgin pidgin-sipe guifications"
-sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray"
-sw[font]="ttf-dejavu wqy-microhei wqy-zenhei opendesktop-fonts"
-sw[java]="apache-ant"
-sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
-sw[vnc]="libvncserver tigervnc remmina"
+  - 项目工具
+    - taiga
+    - quickbuild
+    - gitit
+    - gitlab
 
+** software list
+   - Adobe ps6
+   - JLink
+   - postman
+   - cutecom
+   - davmail
+   - lhosts
+   - plantuml
+   - projectlibre
+   - silk v3 decoder 
+   - smartgit
+   - usb-driver (boogie)
+   - xowa (wikipia)
 
+** angular web 
+   - ng2-admin
+   - ng2-admin-lte
+   - angular-seed
+   - primeNG
+   - nicefish
+     http://git.oschina.net/mumu-osc/NiceFish/
 
-all_sw=""
-
-for v in ${sw[*]} 
-do
- all_sw="$all_sw $v"
-done
-
-echo "all software: $all_sw"
-
-pacman -S $all_sw
-
-#+END_SRC
-
-* software list (2019/05/16)
-
-#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
-
-# please first install video driver and audio driver(alsa), display server(x server), libgl
-declare -A sw
-#sw[wifi]="dialog wpa_supplicant"
-#sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
-sw[lower]="xorg xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
-sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock xss-lock notify-osd"
-sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc "
-sw[browser]="chromium flashplugin firefox"
-sw[pdf]=" zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional xournal" --move to aur
-sw[net]="net-tools openssh wireshark-qt networkmanager network-manager-applet iw nftables"
-
-sw[nemo]="nemo nemo-fileroller nemo-image-converter nemo-preview nemo-python nemo-terminal"
-
-sw[input_method]="ibus ibus-pinyin ibus-table"
-
-sw[iphone]="ifuse"
-sw[bulethooth]="bluez bluez-utils blueman pulseaudio-bluetooth pulseaudio-alsa"
-
-sw[graphic]="scrot nomacs feh inkscape mypaint gcolor2 gimp"
-
-#sw[media]="smplayer"
-sw[media]="mpv"
-
-sw[theme]="lxappearance-gtk3 materia-gtk-theme"
-sw[font]="wqy-microhei wqy-zenhei opendesktop-fonts"
-
-
-sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
-sw[fs]="ntfs-3g ntfsprogs sshfs fuse-exfat exfat-utils"
-sw[download_tool]="deluge"
-# sw[gnome]="evince nautilus file-roller eog eog-plugins"
-
-sw[office]="xchm libreoffice cups "
-
-sw[tool]=" mutt unison keepassx liferea thunderbird"
-
-sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
-sw[devel]="cscope meld pygtksourceview2 prettier git make "
-#sw[lxde]="lxterminal pidgin pidgin-sipe guifications"
-#sw[haskell]="ghc cabal-install"
-#sw[java]="apache-ant"
-#sw[vnc]="libvncserver tigervnc remmina"
-
-sw[aur]="wps rapidsvn"
-
-sw[agioe]="davmail"
-sw[agioe_dev]="scons cutecom jlink-software-and-documentation"
-
-all_sw=""
-
-for v in ${sw[*]} 
-do
- all_sw="$all_sw $v"
-done
-
-echo "all software: $all_sw"
-
-pacman -S $all_sw
-
-#+END_SRC
-
-* config
-
-#+BEGIN_SRC sh
-echo "KEYMAP=dvorak" > /etc/vconsole.conf
-ln -s /usr/share/zoneinfo/UTC /etc/localtime
-systemctl enable slim
-systemctl enable NetworkManager
-#+END_SRC
-
-** change keyboard layout 
-
-/etc/X11/xorg.conf.d/10-evdev.conf
-
-#+BEGIN_EXAMPLE
-Section "InputClass"
-        Identifier "evdev keyboard catchall"
-        MatchIsKeyboard "on"
-        MatchDevicePath "/dev/input/event*"
-        Option "XkbLayout" "us"
-        Option "XkbVariant" "dvp"
-        Driver "evdev"
-EndSection
-#+END_EXAMPLE
-** 触摸板
-https://wiki.archlinux.org/index.php/Touchpad_Synaptics_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29#.E5.9C.A8.2Fdev.2Finput.2F.2A.E4.B8.AD.E6.B2.A1.E6.9C.89.E8.A7.A6.E6.91.B8.E6.9D.BF.E8.AE.BE.E5.A4.87.7D
-
-cat /proc/bus/input/devices
-
- pacman -S xf86-input-synaptics
-** /etc/locale.gen
-en_GB.UTF-8 UTF-8  (英国英语)
-en_GB ISO-8859-1  
-en_HK.UTF-8 UTF-8  (香港英语)
-en_HK ISO-8859-1  
-
-en_US.UTF-8 UTF-8 (美国英语) 
-en_US ISO-8859-1  
-
-
-    去掉包括zh_cn的几行, 
+** open source list
+   - ACE
+   - CMock
+   - UNITY
+   - FreeRTOS
+   - Catch
+   - chez scheme
+   - SOEM,SOES
+   - openPLC, beremiz
+   - flatbuffer
+   - gitit
+   - xmonad
+   - cppcheck
     
-   执行locale-gen
-
-** /etc/locale.conf
-#+BEGIN_SRC sh
-LANG=en_US.UTF-8
-LC_COLLATE=C
-#+END_SRC
-* haskell
-#+BEGIN_SRC sh
-sw_haskell="ghc cabal-install"
-
-pacman -S $sw_haskell
-cabal update
-cabal install pandoc
-
-#+END_SRC
-
-* android
-** lib32 
- - lib32-libstdc++5
- - lib32-elfutils
- - mtpfs android-udev gvfs-mtp
-
-* jdownloader
-* If you happen to forget to run pacman-key --populate archlinux you might get some errors while importing keys.
-* wine
-  - zenity
-  - lib32-lcms2
-  - winetricks
-  - wine-mono
-  - wine_gecko
-
-  - 中文字体
-
-  - 声音
-    - lib32-alsa-lib
-    - lib32-alsa-plugins.
-  - lib32-mpg123
-  - lib32-libpulse
-  - theme
-    winecfg->Desktop integration->Item->windown background: color选择灰色
- 
-
-    
-* archlinux 64位上运行32位程序 
-    http://blog.csdn.net/cnsword/article/details/7447670
-
-archlinux纯64位版是没有办法直接运行32位程序的。因为缺少最主要的glibc的32位版本的支持。
-
-要想使archlinux64支持32位程序，只需要将32位的源添加进来就可以。
-
-/etc/pacman.conf中增加
-
-[plain] view plaincopyprint?
-
-    [multilib]  
-    Include = /etc/pacman.d/mirrorlist  
-
-
-如果是chakra需要将repo的名称修改为lib32和lib32-test
-
-[plain] view plaincopyprint?
-
-    [lib32]  
-    Include = /etc/pacman.d/mirrorlist  
-
-
-
-这样通过pacman安装lib32-glibc库就能提供基本的32位支持了，如果需要32位桌面环境库，安装lib32-gtk或者lib-kde就可以了。看出规律来了吧，这些库的前缀都是lib32-。下一步就可以自由的使用了。
-
-* ibus 
-
-#+BEGIN_SRC 
-
-  cp zhengma.db /usr/share/ibus-table/tables/.
-  cp zhengma.svg /usr/share/ibus-table/icons/.
-
-#+END_SRC
-
-
-
-* 需要copy的
-  - ./.thunderbird 目录
-* archiso
-
-* davmail
-  从aur上下载安装
-启动可以用 systemd 用户级服务管理
-#+BEGIN_EXAMPLE
-$ systemctl --user start davmail@username.service
-$ systemctl --user enable davmail@username.service
-#+END_EXAMPLE
-
-新的用户级管理下，配置文件的位置发生变化，在/home/songzc/.config/davmail/songzc.properties
-而不是在 $HOME下，文件名也变了
-
-** systemd 用户级管理
-   https://wiki.archlinux.org/index.php/Systemd/User_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
-
-
-** ERR DavMail configuration exception: Connect exception: javax.net.ssl.SSLHandshakeException User rejected certificate
-
-证书过期
-
-按照如下方法更新
-
-https://techienotes.blog/2017/12/30/how-to-update-davmail-gateway-configuration-with-new-ssl-certificate/
-
-First get the raw certificate:
-
-#+BEGIN_EXAMPLE
-
-echo Q |openssl s_client -connect mail.example.com:443
-
-#+END_EXAMPLE
-
-Copy the lines from —–BEGIN CERTIFICATE—– to —–END CERTIFICATE—– to a file, say cert.pem, and generate the SHA1 fingerprint using:
-
-#+BEGIN_EXAMPLE
-openssl x509 -in cert.pem -sha1 -noout -fingerprint
-#+END_EXAMPLE
-
-出来的是这种格式
-
-#+BEGIN_EXAMPLE
-44:17:BE:7D:C8:FA:6E:40:8B:C5:F0:96:55:97:AC:E1:5B:E7:37:A5
-#+END_EXAMPLE
-
-加上“\"
-最后写到配置文件里
-
-#+BEGIN_EXAMPLE
-davmail.server.certificate.hash=44\:17\:BE\:7D\:C8\:FA\:6E\:40\:8B\:C5\:F0\:96\:55\:97\:AC\:E1\:5B\:E7\:37\:A5
-#+END_EXAMPLE
 
 
 * install 
@@ -436,39 +215,253 @@ tmpfs           3.9G   27M  3.9G   1% /tmp
 tmpfs           786M   44K  785M   1% /run/user/1000
 ➜  ~ 耗
 
+* software list
 
-* fcitx5
+#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
 
-** fcitx5-qt5-git
-** install kcm-fcitx5-git
- 
+# please first install video driver and audio driver(alsa), display server(x server), libgl
+declare -A sw
+sw[basic]="gvim sudo bash-completion unrar unzip ntfs-3g ntfsprogs sshfs alsa-utils acpi fuse-exfat exfat-utils"
+sw[net]="net-tools openssh wireshark-gtk networkmanager network-manager-applet remmina deluge iw"
+sw[pdf]="xournal zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional" --move to aur
+sw[gnome]="evince nautilus file-roller eog eog-plugins"
+sw[office]="xchm libreoffice "
+sw[media]="smplayer"
+sw[browser]="chromium flashplugin firefox"
+#sw[devel]="cscope rapidsvn meld pygtksourceview2"
+sw[devel]="cscope meld pygtksourceview2 prettier"
+sw[tool]="git mutt unison ibus ibus-pinyin ibus-table notify-osd keepassx liferea thunderbird"
+sw[emacs]="emacs"
+sw[haskell]="ghc cabal-install"
+sw[graphic]="inkscape mypaint gcolor2 slock"
+sw[lxde]="slim lxterminal pidgin pidgin-sipe guifications"
+sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray"
+sw[font]="ttf-dejavu wqy-microhei wqy-zenhei opendesktop-fonts"
+sw[java]="apache-ant"
+sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
+sw[vnc]="libvncserver tigervnc remmina"
+
+
+
+all_sw=""
+
+for v in ${sw[*]} 
+do
+ all_sw="$all_sw $v"
+done
+
+echo "all software: $all_sw"
+
+pacman -S $all_sw
+
+#+END_SRC
+
+* software list (2019/05/16)
+
+#+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
+
+# please first install video driver and audio driver(alsa), display server(x server), libgl
+declare -A sw
+#sw[wifi]="dialog wpa_supplicant"
+#sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
+sw[lower]="xorg xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
+sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock xss-lock notify-osd"
+sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc "
+sw[browser]="chromium flashplugin firefox"
+sw[pdf]=" zathura zathura-cb zathura-djvu zathura-pdf-mupdf zathura-ps"  #xpdf xpdf-chinese-simplified xpdf-chinese-traditional xournal" --move to aur
+sw[net]="net-tools openssh wireshark-qt networkmanager network-manager-applet iw nftables"
+
+sw[nemo]="nemo nemo-fileroller nemo-image-converter nemo-preview nemo-python nemo-terminal"
+
+sw[input_method]="ibus ibus-pinyin ibus-table"
+
+sw[iphone]="ifuse"
+sw[bulethooth]="bluez bluez-utils blueman pulseaudio-bluetooth pulseaudio-alsa"
+
+sw[graphic]="scrot nomacs feh inkscape mypaint gcolor2 gimp"
+
+sw[term_shot]="asciinema termtosvg "
+
+#sw[media]="smplayer"
+sw[media]="mpv"
+
+sw[theme]="lxappearance-gtk3 materia-gtk-theme"
+sw[font]="wqy-microhei wqy-zenhei opendesktop-fonts"
+
+
+sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
+sw[fs]="ntfs-3g ntfsprogs sshfs fuse-exfat exfat-utils"
+sw[download_tool]="deluge"
+# sw[gnome]="evince nautilus file-roller eog eog-plugins"
+
+sw[office]="xchm libreoffice cups "
+
+sw[tool]=" mutt unison keepassx liferea thunderbird"
+
+sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
+sw[devel]="cscope meld pygtksourceview2 prettier git make "
+#sw[lxde]="lxterminal pidgin pidgin-sipe guifications"
+#sw[haskell]="ghc cabal-install"
+#sw[java]="apache-ant"
+#sw[vnc]="libvncserver tigervnc remmina"
+
+sw[aur]="wps rapidsvn"
+
+sw[agioe]="davmail"
+sw[agioe_dev]="scons cutecom jlink-software-and-documentation"
+
+all_sw=""
+
+for v in ${sw[*]} 
+do
+ all_sw="$all_sw $v"
+done
+
+echo "all software: $all_sw"
+
+pacman -S $all_sw
+
+#+END_SRC
+
+* config
+
+#+BEGIN_SRC sh
+echo "KEYMAP=dvorak" > /etc/vconsole.conf
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
+systemctl enable slim
+systemctl enable NetworkManager
+#+END_SRC
+
+** change keyboard layout 
+
+/etc/X11/xorg.conf.d/10-evdev.conf
+
+#+BEGIN_EXAMPLE
+Section "InputClass"
+        Identifier "evdev keyboard catchall"
+        MatchIsKeyboard "on"
+        MatchDevicePath "/dev/input/event*"
+        Option "XkbLayout" "us"
+        Option "XkbVariant" "dvp"
+        Driver "evdev"
+EndSection
+#+END_EXAMPLE
+** 触摸板
+https://wiki.archlinux.org/index.php/Touchpad_Synaptics_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29#.E5.9C.A8.2Fdev.2Finput.2F.2A.E4.B8.AD.E6.B2.A1.E6.9C.89.E8.A7.A6.E6.91.B8.E6.9D.BF.E8.AE.BE.E5.A4.87.7D
+
+cat /proc/bus/input/devices
+
+ pacman -S xf86-input-synaptics
+** /etc/locale.gen
+en_GB.UTF-8 UTF-8  (英国英语)
+en_GB ISO-8859-1  
+en_HK.UTF-8 UTF-8  (香港英语)
+en_HK ISO-8859-1  
+
+en_US.UTF-8 UTF-8 (美国英语) 
+en_US ISO-8859-1  
+
+
+    去掉包括zh_cn的几行, 
+    
+   执行locale-gen
+
+** /etc/locale.conf
+#+BEGIN_SRC sh
+LANG=en_US.UTF-8
+LC_COLLATE=C
+#+END_SRC
+* If you happen to forget to run pacman-key --populate archlinux you might get some errors while importing keys.
+* wine
+  - zenity
+  - lib32-lcms2
+
+  - 中文字体
+  - 声音
+    - lib32-alsa-lib
+    - lib32-alsa-plugins.
+  - lib32-mpg123
+  - lib32-libpulse
+  - theme
+    winecfg->Desktop integration->Item->windown background: color选择灰色
+
+* archlinux 64位上运行32位程序 
+    http://blog.csdn.net/cnsword/article/details/7447670
+
+archlinux纯64位版是没有办法直接运行32位程序的。因为缺少最主要的glibc的32位版本的支持。
+
+要想使archlinux64支持32位程序，只需要将32位的源添加进来就可以。
+
+/etc/pacman.conf中增加
+
+[plain] view plaincopyprint?
+
+    [multilib]  
+    Include = /etc/pacman.d/mirrorlist  
+
+
+如果是chakra需要将repo的名称修改为lib32和lib32-test
+
+[plain] view plaincopyprint?
+
+    [lib32]  
+    Include = /etc/pacman.d/mirrorlist  
+
+
+
+这样通过pacman安装lib32-glibc库就能提供基本的32位支持了，如果需要32位桌面环境库，安装lib32-gtk或者lib-kde就可以了。看出规律来了吧，这些库的前缀都是lib32-。下一步就可以自由的使用了。
+
+* archiso
+* davmail
+  从aur上下载安装
+启动可以用 systemd 用户级服务管理
+#+BEGIN_EXAMPLE
+$ systemctl --user start davmail@username.service
+$ systemctl --user enable davmail@username.service
+#+END_EXAMPLE
+
+新的用户级管理下，配置文件的位置发生变化，在/home/songzc/.config/davmail/songzc.properties
+而不是在 $HOME下，文件名也变了
+
+** systemd 用户级管理
+   https://wiki.archlinux.org/index.php/Systemd/User_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+
+** ERR DavMail configuration exception: Connect exception: javax.net.ssl.SSLHandshakeException User rejected certificate
+
+证书过期
+
+按照如下方法更新
+
+https://techienotes.blog/2017/12/30/how-to-update-davmail-gateway-configuration-with-new-ssl-certificate/
+
+First get the raw certificate:
 
 #+BEGIN_EXAMPLE
 
-  -> fcitx5-qt5-git
-  -> knewstuff
-  -> kcmutils
- extra-cmake-modules
+echo Q |openssl s_client -connect mail.example.com:443
+
 #+END_EXAMPLE
 
+Copy the lines from —–BEGIN CERTIFICATE—– to —–END CERTIFICATE—– to a file, say cert.pem, and generate the SHA1 fingerprint using:
 
+#+BEGIN_EXAMPLE
+openssl x509 -in cert.pem -sha1 -noout -fingerprint
+#+END_EXAMPLE
 
+出来的是这种格式
 
-=> Making package: fcitx5-qt-git r135.9ac0796-2 (Fri 14 Jun 2019 05:57:26 PM CST)
-==> Checking runtime dependencies...
-==> Missing dependencies:
-  -> fcitx5-git
-==> Checking buildtime dependencies...
-==> Missing dependencies:
-  -> qt4
-  -> qt5-quickcontrol
+#+BEGIN_EXAMPLE
+44:17:BE:7D:C8:FA:6E:40:8B:C5:F0:96:55:97:AC:E1:5B:E7:37:A5
+#+END_EXAMPLE
 
-==> Making package: fcitx5-git r408.984f3f2-3 (Fri 14 Jun 2019 05:59:23 PM CST)
-==> Checking runtime dependencies...
-==> Missing dependencies:
-  -> xcb-imdkit-git
-==> Checking buildtime dependencies...
-==> ERROR: Could not resolve all dependencies
+加上“\"
+最后写到配置文件里
+
+#+BEGIN_EXAMPLE
+davmail.server.certificate.hash=44\:17\:BE\:7D\:C8\:FA\:6E\:40\:8B\:C5\:F0\:96\:55\:97\:AC\:E1\:5B\:E7\:37\:A5
+#+END_EXAMPLE
+
 * bluetootch
 
  lspci -k -s 
@@ -524,34 +517,6 @@ mkinitcpio
 modprode
 rmmod
 #+end_example
-* inkscape dark mode 模式
-
-
-** inkscape-dark-theme
-   - https://github.com/AbdullahRagb/inkscape-dark-theme
-
-
-copy theme file to /usr/share/themes/Default/gtk-2.0-key
-or /etc/gtk-2.0
-or replace theme files with gtk-2.0 file in the theme that you use
-
-原来的 /etc/gtk-2.0 里只有im-multipress.conf
-
-
-
-** https://bampress.bambamboo.xyz/archives/1140
-
-
-sudo vim /usr/share/applications/inkscape.desktop
-env GTK2_RC_FILES=/tmp/gtkrc inkscape
-* inkscape :All 21 Inkscape Tools and Uses Explained
-
-  - https://logosbynick.com/inkscape-tools-and-uses/
-
-* inkscape default template
-  
-  ~/.config/inkscape/default.svg
-  
 * 主题设定（theme)
 
   安装以下包
@@ -559,6 +524,35 @@ env GTK2_RC_FILES=/tmp/gtkrc inkscape
      图形设置软件
    - materia-gtk-theme
    - deepin-gtk-theme
+** inkscape dark mode 模式
+
+
+*** inkscape-dark-theme
+    - https://github.com/AbdullahRagb/inkscape-dark-theme
+
+
+ copy theme file to /usr/share/themes/Default/gtk-2.0-key
+ or /etc/gtk-2.0
+ or replace theme files with gtk-2.0 file in the theme that you use
+
+ 原来的 /etc/gtk-2.0 里只有im-multipress.conf
+
+
+
+*** https://bampress.bambamboo.xyz/archives/1140
+
+
+ sudo vim /usr/share/applications/inkscape.desktop
+ env GTK2_RC_FILES=/tmp/gtkrc inkscape
+** inkscape :All 21 Inkscape Tools and Uses Explained
+
+   - https://logosbynick.com/inkscape-tools-and-uses/
+
+** inkscape default template
+  
+   ~/.config/inkscape/default.svg
+  
+
 * bcm 
 
 dmsg | grep -ie  bluetooth

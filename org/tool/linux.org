@@ -809,3 +809,8 @@ echo"Backup complete!!!" >> $LOGFILE 2>&1
 
 
   
+* icloud / nativefier
+
+npm i -g nativefier
+
+nativefier -p linux -a x64 -i icon.png --disable-context-menu --disable-dev-tools --single-instance https://www.icloud.com/

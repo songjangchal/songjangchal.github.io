@@ -288,6 +288,8 @@ sw[media]="mpv"
 sw[theme]="lxappearance-gtk3 materia-gtk-theme"
 sw[font]="wqy-microhei wqy-zenhei opendesktop-fonts"
 
+sw[netstore]="rclone"
+sw[pdf]="pdfsam pdftk foxit masterpdfeditor"
 
 sw[vbox]="virtualbox virtualbox-guest-iso virtualbox-host-modules-arch"
 sw[fs]="ntfs-3g ntfsprogs sshfs fuse-exfat exfat-utils"
@@ -297,6 +299,7 @@ sw[download_tool]="deluge"
 sw[office]="xchm libreoffice cups "
 
 sw[tool]=" mutt unison keepassx liferea thunderbird"
+
 
 sw[wine]="wine wine-mono winetricks lib32-mpg123 lib32-sdl"
 sw[devel]="cscope meld pygtksourceview2 prettier git make "
@@ -467,6 +470,41 @@ davmail.server.certificate.hash=44\:17\:BE\:7D\:C8\:FA\:6E\:40\:8B\:C5\:F0\:96\:
  lspci -k -s 
 sudo  journalctl -b | grep Bluetooth
 
+** bcm 
+
+ dmsg | grep -ie  bluetooth
+
+
+
+ #+begin_example
+
+ [    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+ [    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
+ ➜  /tmp dmesg | grep -ie bluetooth 
+ [    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
+ [    5.058568] Bluetooth: Core ver 2.22
+ [    5.058590] Bluetooth: HCI device and connection manager initialized
+ [    5.058595] Bluetooth: HCI socket layer initialized
+ [    5.058597] Bluetooth: L2CAP socket layer initialized
+ [    5.058601] Bluetooth: SCO socket layer initialized
+ [    5.222159] Bluetooth: hci0: BCM: chip id 63
+ [    5.223161] Bluetooth: hci0: BCM: features 0x07
+ [    5.239163] Bluetooth: hci0: Broadcom Bluetooth Device
+ [    5.240153] Bluetooth: hci0: BCM20702A1 (001.002.014) build 1669
+ [    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
+ [    5.240493] Bluetooth: hci0: BCM: Patch brcm/BCM20702A1-0a5c-21e6.hcd not found
+ [    8.587069] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+ [    8.587070] Bluetooth: BNEP filters: protocol multicast
+ [    8.587074] Bluetooth: BNEP socket layer initialized
+
+ #+end_example
+
+ wget -c https://github.com/winterheart/broadcom-bt-firmware/raw/master/brcm/BCM20702A1-0a5c-21e6.hcd
+
+ pacman -Ql linux-firmware | grep brcm 
+
+ sudo cp BCM20702A1-0a5c-21e6.hcd /usr/lib/firmware/brcm/.
+
 * t530i 闪屏问题
 <2019-11-18 一>
 
@@ -552,41 +590,6 @@ rmmod
   
    ~/.config/inkscape/default.svg
   
-
-* bcm 
-
-dmsg | grep -ie  bluetooth
-
-
-
-#+begin_example
-
-[    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
-[    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
-➜  /tmp dmesg | grep -ie bluetooth 
-[    4.836256] thinkpad_acpi: rfkill switch tpacpi_bluetooth_sw: radio is unblocked
-[    5.058568] Bluetooth: Core ver 2.22
-[    5.058590] Bluetooth: HCI device and connection manager initialized
-[    5.058595] Bluetooth: HCI socket layer initialized
-[    5.058597] Bluetooth: L2CAP socket layer initialized
-[    5.058601] Bluetooth: SCO socket layer initialized
-[    5.222159] Bluetooth: hci0: BCM: chip id 63
-[    5.223161] Bluetooth: hci0: BCM: features 0x07
-[    5.239163] Bluetooth: hci0: Broadcom Bluetooth Device
-[    5.240153] Bluetooth: hci0: BCM20702A1 (001.002.014) build 1669
-[    5.240491] bluetooth hci0: Direct firmware load for brcm/BCM20702A1-0a5c-21e6.hcd failed with error -2
-[    5.240493] Bluetooth: hci0: BCM: Patch brcm/BCM20702A1-0a5c-21e6.hcd not found
-[    8.587069] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-[    8.587070] Bluetooth: BNEP filters: protocol multicast
-[    8.587074] Bluetooth: BNEP socket layer initialized
-
-#+end_example
-
-wget -c https://github.com/winterheart/broadcom-bt-firmware/raw/master/brcm/BCM20702A1-0a5c-21e6.hcd
-
-pacman -Ql linux-firmware | grep brcm 
-
-sudo cp BCM20702A1-0a5c-21e6.hcd /usr/lib/firmware/brcm/.
 * 截图软件
   - scrot
 传到inkscape 编辑

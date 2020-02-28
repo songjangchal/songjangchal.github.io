@@ -637,3 +637,13 @@ https://farseerfc.me/zhs/pacvis.html
 
 
 
+* java 环境
+  #+begin_example
+
+sudo pacman -S jdk10-openjdk
+
+archlinux-java status
+
+sudo archlinux-java set jdk-10-openjdk
+
+  #+end_example

@@ -47,3 +47,24 @@ Toonz 的专业性毋庸置疑，因为曾被用于制作《幽灵公主》等�
     Blender
 Blender 2.8 中推出了 Grease Pencil 2D 动画功能，这也意味着它正是具备了二维动画创作的强大功能。
 
+* inkscape free svg resource
+  https://inkscape.org/gallery/
+
+  https://inkscape.org/forums/tutorials/free-svg-resources-around-the-net/
+
+
+freesvg.org
+
+publicdomainvectors.org
+
+kisscc0
+
+freesvgclipart.com
+
+clipartzero.tk
+
+wpclipart
+
+free-images.org
+
+publicdomainfiles.com

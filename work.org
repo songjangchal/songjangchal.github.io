@@ -232,7 +232,6 @@ If you've forgot the admin password, please edit the file "<QuickBuild server in
 
 I didn't find it when I searched the forums because the thread title has "Passwor" and not "Password" in it. You might want to update the thread title if you can.
 
-
 * taiga back
 http://taigaio.github.io/taiga-doc/dist/#_installation_guide
 
@@ -894,7 +893,6 @@ http://npm.taobao.org/mirrors
 https://github.com/gagle/node-tftp
 
 npm install tftp -g
-
 
 
 
@@ -1890,7 +1888,6 @@ On some systems you may need to install an additional package (e.g. postgresql-c
  local     all     postgres         trust
 
  3）. 保存后执行下面的命令重新加载配置文件: sudo /etc/init.d/postgresql reload
-
 
 * python(windows)
 ** python on windows

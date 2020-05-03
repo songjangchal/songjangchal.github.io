@@ -215,6 +215,8 @@ tmpfs           3.9G   27M  3.9G   1% /tmp
 tmpfs           786M   44K  785M   1% /run/user/1000
 ➜  ~ 耗
 
+mkinitcpio -p linux
+
 * software list
 
 #+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
@@ -264,6 +266,7 @@ pacman -S $all_sw
 declare -A sw
 #sw[wifi]="dialog wpa_supplicant"
 #sw[lower]="xorg-server xorg-apps xorg-xinit xorg-utils xorg-server-utils"
+sw[arch]="pacman-contrib" #pactree
 sw[lower]="xorg xorg-server xorg-apps xorg-xinit alsa-utils acpi parted slim"
 sw[xmonad]="xmonad xmonad-contrib dzen2 conky stalonetray slock xss-lock notify-osd"
 sw[basic]="urxvt gvim emacs sudo bash-completion unrar unzip pandoc "

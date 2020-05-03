@@ -812,7 +812,7 @@ The Ubuntu multiverse respositories also contain:
   - gimagereader
   - tesseract-data-chi_sim
   - tesseract-data-chi_tra
-  -  hunspell-<lang>
+  - hunspell-<lang>
 
 * boogie board
 ** python 
@@ -1039,4 +1039,145 @@ Request URL:https://p54-calendarws.icloud.com/ca/collections/70570E18-F277-48BB-
   - firefox
   - thunderbir
   - zotero
+
+* linux 多网口 变成交换机
+  - iptables详解：iptables概念(写的不错，值得看)
+    http://www.zsythink.net/archives/1199
+  
+** 使用NetworkManager命令行是可以工作的
+
+   https://wiki.archlinux.org/index.php/Network_bridge
+
+生成bridge
+#+begin_src bash 
+nmcli connection add type bridge ifname br0 stp no
+#+end_src
+
+Making interface enp30s0 a slave to the bridge: 
+
+#+begin_src bash 
+nmcli connection add type bridge-slave ifname enp30s0 master br0
+#+end_src
+
+Setting the existing connection as down:
+
+#+begin_src bash 
+nmcli connection down Connection
+#+end_src
+
+Setting the new bridge as up:
+
+#+begin_src bash 
+ nmcli connection up bridge-br0
+#+end_src
+
+
+ip link
+
+#+begin_example
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: enp0s25: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP mode DEFAULT group default qlen 1000
+    link/ether 3c:97:0e:44:b4:72 brd ff:ff:ff:ff:ff:ff
+3: wlp3s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DORMANT group default qlen 1000
+    link/ether 20:68:9d:f1:d8:3e brd ff:ff:ff:ff:ff:ff
+4: br0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 6a:77:8a:ef:e0:d5 brd ff:ff:ff:ff:ff:ff
+5: enp0s20u2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel master br0 state UP mode DEFAULT group default qlen 1000
+    link/ether 30:b4:9e:ef:10:be brd ff:ff:ff:ff:ff:ff
+#+end_example
+
+** linux bridge
+   https://goyalankit.com/blog/linux-bridge
+
+#+begin_example
+
+Linux bridge is a layer 2 virtual device that on its own cannot receive or transmit anything unless you bind one or more real devices to it. source.
+
+As Anatomy of a Linux bridge puts it, bridge mainly consists of four major components:
+
+    Set of network ports (or interfaces): used to forward traffic between end switches to other hosts in the network.
+    A control plane: used to run Spanning Tree Protocol (STP) that calculates minimum spanning tree, preventing loops from crashing the network.
+    A forwarding plane: used to process incoming input frames from the ports, forward them to the network port by making a forwarding decision based on the MAC learning database.
+    MAC learning database: used to keep track of the host locations in the LAN.
+
+For each unicast mac address, bridge maintains a mac learning database to decide which ports to forward based on MAC addresses, and if it can’t find an entry for a given mac address, it will broadcast the frame to all ports except the one where it received the frame from.
+
+There are three main configuration subsystems to do bridges:
+
+    ioctl: This interface is used to create/destroy bridges and add/remove interfaces to/from a bridge.
+    sysfs: Management of bridge and port specific parameters.
+    netlink: Asynchronous queue based communication that uses AF_NETLINK address family, can also be used to interact with bridge.
+
+In this article, we only talk about ioctl.
+
+#+end_example
+
+#+begin_src bash 
+pacman -S bridge-utils
+#+end_src
+
+
+  - linux bridge网桥的工作原理
+https://blog.csdn.net/u014027051/article/details/53908878
+  Bridge（桥）是 Linux 上用来做 TCP/IP 二层协议交换的设备，与现实世界中的交换机功能相似。
+  - Linux实现交换机的另一种方法
+    https://blog.csdn.net/sinat_20184565/article/details/80223749
+
+   首先创建全局网桥br_test。将所有物理接口添加到网桥下。此时，相当于一个纯二层交换机。
+    #+begin_example
+    brctl addbr br_test
+    brctl addif br_test eth0
+    brctl addif br_test eth1
+
+    #+end_example
+    
+** Bridging wlan0 to eth0
+
+   - https://serverfault.com/questions/152363/bridging-wlan0-to-eth0
+
+
+#+begin_src bash
+
+ iw dev <wifiInterface> set 4addr on
+
+#+end_src
+** ebtables
+** arp proxy 
+   https://wiki.debian.org/BridgeNetworkConnectionsProxyArp
+
+   
+   路由里加的是与eth0在同一LAN内的主机IP, 而不是wlan一侧LAN的主机IP.
+   
+   #+begin_src bash 
+   echo 1 > /proc/sys/net/ipv4/conf/all/proxy_arp
+   echo 1 > /proc/sys/net/ipv4/ip_forward
+   ip ro add 10.42.0.11/32 dev eth0 
+   #+end_src
+
+   自动化配置，　需要安装arp proxy软件。如果只是临时用一下，则不用安装，只要每次输入上面说的命令，配置即可。
+     - parprouted 
+     - parpd
+
+   
+** 通过ＡＰ访问外网
+https://www.cnblogs.com/shineshqw/articles/2351028.html
+
+#+begin_example
+  echo 1 > /proc/sys/net/ipv4/ip_forward
+
+  iptables -t nat -A POSTROUTING -s 192.168.8.0/24 -o eth0 -j SNAT --to 你的eth0地址
+#+end_example
+   
+192.168.8.0 是ＡＰ的网段. 
+
+
+
+* mp3 to wav
+
+#+begin_example
+ffmpeg -i
+
+ffmpeg -i The\ Truth\ That\ You\ Leave-Pianoboy.mp3 -acodec pcm_u8 -ar 320000 The\ Truth\ That\ You\ Leave.wav
+#+end_example
 

@@ -95,3 +95,6 @@ except Exception as e:
 print(e)
 
 #+END_SRC
+* 多出一个空格
+
+  配置中： details-->aut select 一定设置成no, 如果设置成yes时就会在用空格键确认字时多出一个空格。

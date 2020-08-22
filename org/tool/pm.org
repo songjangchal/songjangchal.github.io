@@ -1,5 +1,31 @@
 #+title: 项目管理相关
 
+* drawing
+
+** 两个参考图网站
+   - www.draw.io
+   - https://www.processon.com/
+* scrum 
+** issue vs user story vs task on boards
+https://github.com/taigaio/taiga-front/issues/797
+
+
+We share the standard scrum point of view about what user story and task means. A user story, is a way to define a software feature from an end-user perspective. For example, a user story may look like "As a user, I want to be able to update my profile with age, present occupation and social interests, so that people visiting my profile page get an idea of my interests". A task, on the other hand, is typically something like code this, design that, create test data for such-and-such, automate that, and so on. These tend to be things done by one person. When creating a backlog or doing estimations you should be thinking at user story level, not in tasks, that's the reason why backlog work with user stories.
+
+The usual scrum workflow divides the user stories in tasks when you create a sprint and you move them there, that's the reason why the visualization of tasks only makes sense when you have selected a sprint.
+
+Backlog -> works with user stories
+Sprint -> work with tasks from the user stories associated to that sprint
+Issues -> we use to cover any other items that can have different workflows, the most common should be bugs/defects
+
+Conceptually it makes sense not to mix these three different items under the same areas. Another thing to consider is that in taiga user stories, tasks and issues have completely independant and customizable workflows with different status, so they can't be grouped by it. What Taiga supports is the "promote to user story" feature for issues, we found that commonly there are issues that really are user stories but the team needs to keep full traceability about them.
+
+We have an article in our blog speaking about user stories, it could be usefull -> https://blog.taiga.io/user-stories-demystified.html .
+There are also a lot of articles about the differences between user stories, tasks, epics, features...(for example this one https://www.mountaingoatsoftware.com/blog/the-difference-between-a-story-and-a-task).
+I would also recommend the reading of https://en.wikipedia.org/wiki/Scrum_(software_development)#Artifacts (the different artifacts used on scrum), it also includes a clear explanation about how backlog and sprint at user story and task level.
+
+Regards! ;)
+
 * task juggler
 
 #+begin_src bash 
@@ -10,9 +36,18 @@
 
 
 #+begin_src bash 
-gem install rake mail rspec term-ansicolor simplercov
+gem install rake mail rspec term-ansicolor simplecov
 
 #+end_src
+
+
+#+begin_src bash 
+
+cd taskjuggler3; rake gem
+
+#+end_src
+
+
 
 
 使用, p是输出目录，
@@ -55,29 +90,49 @@ workinghours mon - fri 8:30 - 12:00, 13:00 - 17:00
   ->8-
 
 #+END_EXAMPLE
+** 配置账户
+   现共有10人，添加10个linux 用户，名字和公司的一样
+   原来的taskjuggler帐就用songzc代替，也可以和平时的环境一致
 
-* drawing
+   newusers
 
-** 两个参考图网站
-   - www.draw.io
-   - https://www.processon.com/
-* scrum 
-** issue vs user story vs task on boards
-https://github.com/taigaio/taiga-front/issues/797
+#+begin_example
+zcsong:zcsong:1001:1001::/home/zcsong:/sbin/nologin
+
+#+end_example
+
+   执行pwconv   
+   
+* postfix, dovecot
+  
+  /etc/hosts
+
+#+begin_example
+
+127.0.0.1 szc.com
+127.0.0.1 mail.szc.com
+
+#+end_example
+ /etc/postfix/main.cf
+
+#+begin_example
+
+myhostname = mail.szc.com
+mydomain = szc.com
+inet_interfaces = all
+
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 
 
-We share the standard scrum point of view about what user story and task means. A user story, is a way to define a software feature from an end-user perspective. For example, a user story may look like "As a user, I want to be able to update my profile with age, present occupation and social interests, so that people visiting my profile page get an idea of my interests". A task, on the other hand, is typically something like code this, design that, create test data for such-and-such, automate that, and so on. These tend to be things done by one person. When creating a backlog or doing estimations you should be thinking at user story level, not in tasks, that's the reason why backlog work with user stories.
+mynetworks_style = host
 
-The usual scrum workflow divides the user stories in tasks when you create a sprint and you move them there, that's the reason why the visualization of tasks only makes sense when you have selected a sprint.
+home_mailbox = Maildir/
 
-Backlog -> works with user stories
-Sprint -> work with tasks from the user stories associated to that sprint
-Issues -> we use to cover any other items that can have different workflows, the most common should be bugs/defects
 
-Conceptually it makes sense not to mix these three different items under the same areas. Another thing to consider is that in taiga user stories, tasks and issues have completely independant and customizable workflows with different status, so they can't be grouped by it. What Taiga supports is the "promote to user story" feature for issues, we found that commonly there are issues that really are user stories but the team needs to keep full traceability about them.
+#+end_example
 
-We have an article in our blog speaking about user stories, it could be usefull -> https://blog.taiga.io/user-stories-demystified.html .
-There are also a lot of articles about the differences between user stories, tasks, epics, features...(for example this one https://www.mountaingoatsoftware.com/blog/the-difference-between-a-story-and-a-task).
-I would also recommend the reading of https://en.wikipedia.org/wiki/Scrum_(software_development)#Artifacts (the different artifacts used on scrum), it also includes a clear explanation about how backlog and sprint at user story and task level.
 
-Regards! ;)
+#+begin_src bash 
+newaliases
+#+end_src
+

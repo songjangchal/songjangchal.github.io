@@ -1260,3 +1260,6 @@ echo <"0"/"1"> > /proc/sys/kernel/core_uses_pid
 ** packet injection
  https://en.wikipedia.org/wiki/Packet_injection
 
+* Linux 内核系统架构
+  https://cloud.tencent.com/developer/article/1507511
+

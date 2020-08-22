@@ -271,3 +271,23 @@ _=/usr/local/bin/stack
 monitor_num=2
 screen1_width=0:
 
+* Data.Text vs. String vs. Char
+  Char: 可以看成表示一个字节， 内容只是单纯的表示为一个字节里储存的内容，没有特别的意义
+  String : Char 类型的list 表示的别名, 对应于C中的数组，像一个流的概念
+  Data.Text :  Unicode text表示， 是将string 给于特殊的意义
+
+  两个转换函数，
+  #+begin_example
+  import qualified Data.Text as T
+
+  pack :: String -> Text
+
+  O(n) Convert a String into a Text. Subject to fusion. Performs replacement on invalid scalar values.
+
+  unpack :: Text -> String
+
+  O(n) Convert a Text into a String. Subject to fusion.
+  #+end_example
+
+
+

@@ -639,7 +639,6 @@ As in GIMP, to do the same simply got to Edit → Input Devices.... Now for each
 https://farseerfc.me/zhs/pacvis.html
 
 
-
 * java 环境
   #+begin_example
 

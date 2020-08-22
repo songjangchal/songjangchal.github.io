@@ -19,13 +19,15 @@ Generation of diagrams and flowcharts from text in a similar manner as markdown.
 ** asty
 ** gnu plot
 ** r 
-
+** geogebra
+GeoGebra 是一个结合「几何」、「代数」与「微积分」的动态数学软件，
 
 * 画画软件
   - gimp
   - inkscape
   - krita
   - mypaint
+  - 
 
 * 2D动画软件
     Pencil2D

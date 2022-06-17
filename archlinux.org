@@ -217,7 +217,7 @@ tmpfs           786M   44K  785M   1% /run/user/1000
 
 mkinitcpio -p linux
 
-* software list
+* software list (old)
 
 #+BEGIN_SRC sh :tangle install_software_szc.sh :shebang #!/bin/bash
 

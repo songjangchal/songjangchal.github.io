@@ -2,7 +2,7 @@
 
 * 守护进程 (daemon)
 
-#+BEGIN_EXAMPLE
+  #+BEGIN_EXAMPLE
 systemctl --user  enable emacs.service
 #+END_EXAMPLE
 
@@ -59,8 +59,8 @@ emacsclient -c   # in gui
 
 * org 转义符
 
-\under{} 
-\plus{}
+ \under{} 
+ \plus{}
 
 https://emacs.stackexchange.com/questions/16688/how-can-i-escape-the-in-org-mode-to-prevent-bold-fontification
 
@@ -561,9 +561,9 @@ http://book.emacs-china.org/
 * google translate 
 
 
-google-translate-core.el 77:  "http://translate.google.com/translate_a/single")
-google-translate-core.el 80:  "http://translate.google.com/translate_tts")
-google-translate-tk.el 48:  "http://translate.google.com/")
+google-translate-core.el 77:  "http://translate.google.com/translate_a/single")
+google-translate-core.el 80:  "http://translate.google.com/translate_tts")
+google-translate-tk.el 48:  "http://translate.google.com/")
 
 
 https://translate.google.cn
